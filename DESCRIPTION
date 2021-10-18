@@ -1,0 +1,15 @@
+Package: MyoManager
+Type: Package
+Title: Visualizal analysis of skeletal muscle microscopy data. 
+Version: 0.1.0
+Author: person("Yinni", "Kuang", email = "kareen.kuang@mail.utoronto.ca", role = c("aut", "cre"))
+Maintainer: Yinni Kuang <kareen.kuang@mail.utoronto.ca>
+Description: Reading, display, and analysis of confocal microscopy images of fluorescence stained skeletal muscle from various organisms.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Imports: 
+    ggplot2
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.2
+Depends: R (>= 3.1.0)
