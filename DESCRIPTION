@@ -1,6 +1,6 @@
 Package: MyoManager
 Type: Package
-Title: Visualizal analysis of skeletal muscle microscopy data. 
+Title: Visual analysis of skeletal muscle microscopy data. 
 Version: 0.1.0
 Author: person("Yinni", "Kuang", email = "kareen.kuang@mail.utoronto.ca", role = c("aut", "cre"))
 Maintainer: Yinni Kuang <kareen.kuang@mail.utoronto.ca>
