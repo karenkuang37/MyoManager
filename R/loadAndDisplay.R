@@ -7,9 +7,6 @@
 #'
 #' @param image_path A \code{character} vector of one or more paths to image files
 #'
-#' @param image_obj An object of Image class specific to EBImage, stored as multi-
-#' dimensional arrays containing the pixel intensities.
-#'
 #' @return LoadImage does not return. ViewImage displays an image object
 #' processed by LoadImage using R graphics.
 #'
@@ -31,7 +28,6 @@
 #'\url{(https://bioconductor.org/packages/release/bioc/html/EBImage.html}
 #'
 #' @importFrom magick image_read as_EBImage
-#' @importFrom EBImage display
 #'
 
 LoadImage <- function(image_path) {
@@ -64,6 +60,15 @@ LoadImage <- function(image_path) {
   }
 }
 #'
+#' Displays image
+#'
+#' Prompts R's display window to open for single-frame and multi-frame images
+#'
+#' @param image_obj An object of Image class specific to EBImage, stored as multi-
+#' dimensional arrays containing the pixel intensities.
+#'
+#' @importFrom EBImage display
+#'
 ViewImage <- function(image_obj){
 
   # check image file is of suitable type
@@ -76,8 +81,8 @@ ViewImage <- function(image_obj){
 #'
 #' checks whether 'i' is a suitable image
 #'
-#' @inheritParams loadAndDisplay
-#'
+#' @param image_obj An object of Image class specific to EBImage, stored as multi-
+#' dimensional arrays containing the pixel intensities.
 ValidImage <- function(image_obj) {
   if(is(image_obj, "Image"))
     TRUE
