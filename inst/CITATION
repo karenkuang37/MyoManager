@@ -1,0 +1,13 @@
+citHeader("To cite TestingPackage in publications use:")
+
+citEntry(
+  entry    = "Unpublished",
+  title    = "MyoManager: Visual analysis tool for skeletal muscle microscopy data",
+  author   = "Yinni (Karen) Kuang",
+  note     = "Unpublished",
+  year     = "2021",
+  textVersion = paste(
+"Yinni, K. (2021) MyoManager: Visual analysis tool for skeletal muscle microscopy data. Unpublished. URL https://github.com/karenkuang37/MyoManager"
+  )
+)
+
