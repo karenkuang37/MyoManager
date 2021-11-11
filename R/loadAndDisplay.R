@@ -12,9 +12,15 @@
 #'
 #' @examples
 #' # Example 1
+#' #load sample tiff distributed with the package
+#' library(MyoManager)
+#' image <- loadImage(system.file('extdata/Human_01.tiff', package = 'MyoManager'))
 #'
 #' \dontrun{
 #' # Example 2
+#' #load sample jpeg from public link
+#' library(MyoManager)
+#' image <- loadImage("https://user-images.githubusercontent.com/60583839/141215629-f19d4a77-c5f0-491f-9262-b22cd59739e3.jpg")
 #'
 #'}
 #' @references
@@ -28,9 +34,9 @@
 #'\url{(https://bioconductor.org/packages/release/bioc/html/EBImage.html}
 #'
 #' @importFrom magick image_read as_EBImage
-#'
+#' @export
 
-LoadImage <- function(image_path) {
+loadImage <- function(image_path) {
 
   # load multiple images
   if(length(image_path) > 1) {
@@ -39,7 +45,7 @@ LoadImage <- function(image_path) {
       # stop and return error if file doesn't exist
       if(!file.exists(x)) {
         stop(
-          paste(x, 'is invalide file path.')
+          paste("input is an invalid file path.")
         )
       }
 
@@ -51,7 +57,7 @@ LoadImage <- function(image_path) {
     # stop and return error if file doesn't exist
     if(!file.exists(image_path)) {
       stop(
-        paste(image_path, 'is an invalid file path.')
+        paste("input is an invalid file path.")
       )
     }
     # load images
@@ -67,12 +73,26 @@ LoadImage <- function(image_path) {
 #' @param image_obj An object of Image class specific to EBImage, stored as multi-
 #' dimensional arrays containing the pixel intensities.
 #'
-#' @importFrom EBImage display
+#' @example
+#' #Example 1
+#' #display a sample tiff distributed with the package
+#' #for tiff images with multiple channels, click to scroll through the frames
+#' library(MyoManager)
+#' image <- loadImage(system.file('extdata/Mouse_01.tiff', package='MyoManager'))
+#' viewImage(image)
 #'
-ViewImage <- function(image_obj){
+#' #Example 2
+#' #display a sample  jpeg from source link
+#' library(MyoManager)
+#' image <- loadImage("https://user-images.githubusercontent.com/60583839/141215629-f19d4a77-c5f0-491f-9262-b22cd59739e3.jpg")
+#' viewImage(image)
+#'
+#' @importFrom EBImage display
+#' @export
+viewImage <- function(image_obj){
 
   # check image file is of suitable type
-  ValidImage(image_obj)
+  validImage(image_obj)
 
   EBImage::display(image_obj)
 }
@@ -83,7 +103,7 @@ ViewImage <- function(image_obj){
 #'
 #' @param image_obj An object of Image class specific to EBImage, stored as multi-
 #' dimensional arrays containing the pixel intensities.
-ValidImage <- function(image_obj) {
+validImage <- function(image_obj) {
   if(is(image_obj, "Image"))
     TRUE
   else
