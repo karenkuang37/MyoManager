@@ -11,5 +11,6 @@ viewImage(image_obj)
 dimensional arrays containing the pixel intensities.}
 }
 \description{
-Prompts R's display window to open for single-frame and multi-frame images
+Prompts R's graphic display window to open, this device supports single and multi-frame
+images as well as different degrees of zoom, making it easy to visualize detailed microscopy data.
 }

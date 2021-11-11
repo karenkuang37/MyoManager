@@ -2,7 +2,7 @@
 % Please edit documentation in R/loadAndDisplay.R
 \name{loadImage}
 \alias{loadImage}
-\title{Loading and displaying images}
+\title{Loading images}
 \usage{
 loadImage(image_path)
 }
@@ -14,10 +14,15 @@ LoadImage does not return. ViewImage displays an image object
 processed by LoadImage using R graphics.
 }
 \description{
-The following functions handles several types of image data (jpeg, png, tiff)
-by importing images and prompting a R graphics window for display.
-The graphics device supports multiple frames and different degrees of zoom,
-which makes it easy to visualize detailed microscopy data.
+The following function is a wrap around \code{\link[magick]{image_read}} and
+\code{\link[magick]{as_EBImage}} to load one or more images from files.
+}
+\details{
+Magick can handle for a variety of image formats (over 200), EBImage has a
+superior display quality but only supports the three common image formats
+jpg, png, and tiff. Hence by loading images with Magick and converting them
+to EBImage objects for display, we can avoid unsupported image types while
+maximizing display functionalities.
 }
 \examples{
 # Example 1
