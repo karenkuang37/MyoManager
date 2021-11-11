@@ -9,7 +9,7 @@
 #' to EBImage objects for display, we can avoid unsupported image types while
 #' maximizing display functionalities.
 #'
-#' @param image_path A \code{character} vector of one or more paths to image files
+#' @param image_path A \code{character} vector of one or more paths or URLs to image files
 #'
 #' @return LoadImage does not return. ViewImage displays an image object
 #' processed by LoadImage using R graphics.
@@ -47,25 +47,35 @@ loadImage <- function(image_path) {
     lapply(image_path, function(x) {
 
       # stop and return error if file doesn't exist
-      if(!file.exists(x)) {
+      img <- if(is.character(x)){
+        if(file.exists(x)){
+          img <- image_read(x)
+        } else if(grepl("^https?://", x)){
+          img <- image_read(x)
+        }else {
         stop(
           paste("input is an invalid file path.")
         )
-      }
+      }}
 
-      # load image
-      img <- image_read(x)
+      # convert image to EBImage object
       as_EBImage(img)
     })
   } else {
+
     # stop and return error if file doesn't exist
-    if(!file.exists(image_path)) {
-      stop(
-        paste("input is an invalid file path.")
-      )
-    }
-    # load images
-    img <- image_read(image_path)
+    img <- if(is.character(image_path)){
+      if(file.exists(image_path)){
+        img <- image_read(image_path)
+      } else if(grepl("^https?://", image_path)){
+        img <- image_read(image_path)
+      }else {
+        stop(
+          paste("input is an invalid file path.")
+        )
+      }}
+
+    # convert image to EBImage object
     as_EBImage(img)
   }
 }

@@ -9,19 +9,20 @@ test_that("valid file from path", {
   expect_s4_class(human, "Image")
 })
 
-test_that("valid file from source link", {
+test_that("valid file from url", {
 
-  human <- loadImage(system.file('extdata/Human_01.tiff', package = 'MyoManager'))
+  rabbit <- loadImage("https://user-images.githubusercontent.com/60583839/141215629-f19d4a77-c5f0-491f-9262-b22cd59739e3.jpg")
 
-  expect_type(human, "double")
-  expect_s4_class(human, "Image")
+  expect_type(rabbit, "double")
+  expect_s4_class(rabbit, "Image")
 })
 
-test_that("multiple valid files from path", {
+test_that("multiple valid files from path/url", {
 
   human <- system.file('extdata/Human_01.jpg', package = 'MyoManager')
   mouse <- system.file('extdata/Mouse_01.jpg', package = 'MyoManager')
-  rabbit <- system.file('extdata/Rabbit_01.jpg', package = 'MyoManager')
+  #rabbit <- system.file('extdata/Rabbit_01.jpg', package = 'MyoManager')
+  rabbit <- "https://user-images.githubusercontent.com/60583839/141215629-f19d4a77-c5f0-491f-9262-b22cd59739e3.jpg"
   x <- list(human, mouse, rabbit)
   img_set <- loadImage(x)
 

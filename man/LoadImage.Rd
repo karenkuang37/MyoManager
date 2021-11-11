@@ -7,7 +7,7 @@
 loadImage(image_path)
 }
 \arguments{
-\item{image_path}{A \code{character} vector of one or more paths to image files}
+\item{image_path}{A \code{character} vector of one or more paths or URLs to image files}
 }
 \value{
 LoadImage does not return. ViewImage displays an image object
