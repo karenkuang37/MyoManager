@@ -39,7 +39,6 @@
 #'
 #' @importFrom magick image_read as_EBImage
 #' @export
-
 loadImage <- function(image_path) {
 
   # load multiple images
@@ -87,6 +86,10 @@ loadImage <- function(image_path) {
 #'
 #' @param image_obj An object of Image class specific to EBImage, stored as multi-
 #' dimensional arrays containing the pixel intensities.
+#' @param color_mode A \code{character} string containing the color mode of the image
+#' which can be either Grayscale or Color. *Note it does not change the pixel values
+#' of the image, only how R Graphics displays it. If missing, default to Grayscale.
+#' @param image_title A \code{character} string specifying the title of the display image.
 #'
 #' @example
 #' #Example 1
@@ -94,22 +97,42 @@ loadImage <- function(image_path) {
 #' #for tiff images with multiple channels, click to scroll through the frames
 #' library(MyoManager)
 #' image <- loadImage(system.file('extdata/Mouse_01.tiff', package='MyoManager'))
-#' viewImage(image)
+#' viewImage(image, "Color", "Mouse")
 #'
 #' #Example 2
-#' #display a sample  jpeg from source link
+#' #display a sample jpeg from source link
 #' library(MyoManager)
 #' image <- loadImage("https://user-images.githubusercontent.com/60583839/141215629-f19d4a77-c5f0-491f-9262-b22cd59739e3.jpg")
-#' viewImage(image)
+#' viewImage(image, "Greyscale, "rabbit")
 #'
-#' @importFrom EBImage display
+#' @importFrom EBImage Image display
 #' @export
-viewImage <- function(image_obj){
+
+viewImage <- function(image_obj, color_mode = c('Greyscale', 'Color'), image_title = NULL){
 
   # check image file is of suitable type
   validImage(image_obj)
 
-  EBImage::display(image_obj)
+  # choosing the type of display
+  if(!missing(color_mode)){
+
+    # check for correct color mode choice
+    if(!is.character(color_mode)){
+      stop(
+        paste("color_mode must be either 'Greyscale' or 'Color'.")
+      )
+    }
+
+    if(color_mode == "Greyscale"||color_mode == "Color"){
+      colorMode(image_obj) <- color_mode
+    } else {
+      stop(
+        paste("color_mode must be either 'Greyscale' or 'Color'.")
+      )
+    }
+  }
+
+  EBImage::display(image_obj, title = image_title)
 }
 #'
 #' Private Helper
