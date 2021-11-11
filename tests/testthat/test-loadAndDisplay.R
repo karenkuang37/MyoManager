@@ -1,9 +1,15 @@
 context("Loading and displaying images")
 library(TestingPackage)
-# An example of tests for one function. Tests should be
-# provided for all functions.
 
 test_that("valid file from path", {
+
+  human <- loadImage(system.file('extdata/Human_01.tiff', package = 'MyoManager'))
+
+  expect_type(human, "double")
+  expect_s4_class(human, "Image")
+})
+
+test_that("valid file from source link", {
 
   human <- loadImage(system.file('extdata/Human_01.tiff', package = 'MyoManager'))
 
