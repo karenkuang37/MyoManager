@@ -33,15 +33,15 @@
 #'\href{https://pubmed.ncbi.nlm.nih.gov/20338898/}{link}
 #'\url{(https://bioconductor.org/packages/release/bioc/html/EBImage.html}
 #'
-#' @importFrom EBImage getFrame numberOfFrames
+#' @importFrom EBImage getFrame
 #' @export
 frameSelect <- function(img, frame_number){
 
   x = frame_number
-  n = numberOfFrames(img)
+  total_frame_number = dim(img)[3]
 
   # check image file is of suitable type
-  validImage(image_obj)
+  validImage(img)
 
   #check if input is missing
   if(missing(frame_number)){
@@ -51,20 +51,35 @@ frameSelect <- function(img, frame_number){
   }
 
   # check if input is an integer
-  if(!is.integer(x)){
+  if(!is.wholenumber(x)){
     stop(
       paste("frame_number must be an integer.")
     )
   }
 
   #check if input is a valid frame number
-  if(x<1 || x>n){
+  if(x<1 || x>total_frame_number){
     stop(
       paste("frame_number must be between 1 and ", n)
     )
   }
 
   getFrame(img, x)
+}
+#'
+#' Private Helper
+#'
+#' R's base function is.integer(x) does not test if x contains integer numbers.
+#' Hence the added helper to test for integer.
+#'
+#' @references
+#' R Core Team (2021). R: A language and environment for statistical computing. R
+#' Foundation for Statistical Computing, Vienna, Austria.
+#' \href{https://www.R-project.org/}{link}.
+#'
+#' @param x A numeric value to be tested upon.
+is.wholenumber <- function(x, tol = .Machine$double.eps^0.5) {
+  abs(x - round(x)) < tol
 }
 #'
 #' Apply a blurring filter
