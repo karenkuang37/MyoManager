@@ -1,53 +1,79 @@
-#' (For multi-frame images), frame selection.
+#' Count the number of distinct objects in an image (nuclei)
 #'
-#' The following function is a wrap around \code{\link[EBImage]{getFrame}} to
-#' select 1 frame to proceed with analysis.
+#' The following function uses several functions from \code{\link[EBImage]} to
+#' perform counting of cell nuclei in selected image. *Frame of only nuclei is
+#' recommended (typically frame #3), counting accurary decrease if composite
+#' image is used.
 #'
 #' When it comes to counting cellular objects (most commonly nuclei),
 #' The key steps are:
-#' blur the image
-#' apply a threshold to turn nuclei into 'blobs'
-#' count the 'blobs'
+#' - enhance image if objects have week signals or ill-defined edges
+#'   (e.g. blurring turns nuclei into identifiable 'blobs')
+#' - apply a threshold to turn Greyscale image binary so every pixel is either 0 or 1
+#' - count objects in the foreground (with pixel value of 1)
 #'
 #' @param img An object of Image class specific to EBImage, stored as multi-
 #' dimensional arrays containing the pixel intensities.
-#' @param frame_number A \code{numeric} value specifying a frame in img.
 #'
-#' @return
+#' @return Returns a \code{numeric} value of the number of nuclei counted.
 #'
 #' @examples
 #' # Example 1
-#' #
-#'
+#' rabbit = readImage(system.file('extdata/Rabbit_01.tif', package='MyoManager'))
+#' rNuc = getFrame(rabbit, 3)
+#' countNuclei(rNuc)
+#' viewImage(rNuc)
 #'
 #' # Example 2
-#'
+#' mouse = readImage(system.file('extdata/Mouse_01.tif', package='MyoManager'))
+#' mNuc = getFram(mouse, 3)
+#' countNuclei(mNuc)
+#' viewImage(mNuce)
 #'
 #' @references
 #'Gregoire Pau, Florian Fuchs, Oleg Sklyar, Michael Boutros, and Wolfgang Huber
 #'(2010): EBImage - an R package for image processing with applications to
 #'cellular phenotypes. \emph{Bioinformatics}, 26(7), pp. 979-981,
 #'\href{https://pubmed.ncbi.nlm.nih.gov/20338898/}{link}
-#'\url{(https://bioconductor.org/packages/release/bioc/html/EBImage.html}
+#'\url{https://bioconductor.org/packages/release/bioc/html/EBImage.html}
+#'
+#'Xiaolu Yang, Xuanjing Shen, Jianwu Long, Haipeng Chen,
+#'(2012): An Improved Median-based Otsu Image Thresholding Algorithm,
+#'\emph{AASRI Procedia},Volume 3, pp. 468-473,
+#'\href{https://doi.org/10.1016/j.aasri.2012.11.074}{link}
+#'\url{https://www.sciencedirect.com/science/article/pii/S2212671612002338}
 #'
 #' @importFrom EBImage thresh opening fillHull bwlabel
+#' @importFrom berryFunctions is.error
 #' @export
+
 countNuclei <- function(img){
 
-  # apply a threshold computes binary mask
-  mask = thresh(img_blur, w=10, h=10, offset=0.05)
+  # check image file is of suitable type
+  validImage(img)
 
-  # opening is an erosion followed by a dilation performed by the mask
-  nmask = opening(mask, makeBrush(5, shape='disc'))
+  # use alternative adaptive threshold method if optimal otsu option fails
+  # consider replacing is.error() with trycatch()
+  if(is.error(otsu(img, range = c(-1, 2)))){
+
+    cat(paste("Optimal method cannot support the modified image,",
+              "switched to alternative method.",
+              "Consider using original greyscale image to improve counting" ,sep="\n"))
+
+    mask = thresh(img, w=10, h=10, offset=0.5)
+  } else {
+    # apply the binary threshold calculated by otsu
+    mask = img > otsu(img, range = c(-1, 2))
+  }
 
   # fillHull fills in holes in objects
-  nmask = fillHull(nmask)
+  nmask = fillHull(mask)
 
-  # the bwlabel() function labels and 'counts' the blurred blobs
+  # the bwlabel() function labels and 'counts' all connected objects in the foreground
   nbnuclei <- max(bwlabel(nmask))
 
   # outputs the total count
-  cat('Number of nuclei in this image =', nbnuclei,'\n')
+  cat('\n', 'Number of nuclei in this image =', nbnuclei,'\n')
   return(nbnuclei)
 }
 # [END]

@@ -2,7 +2,7 @@
 % Please edit documentation in R/nucleiTool.R
 \name{countNuclei}
 \alias{countNuclei}
-\title{(For multi-frame images), frame selection.}
+\title{Count the number of distinct objects in an image (nuclei)}
 \usage{
 countNuclei(img)
 }
@@ -14,15 +14,20 @@ dimensional arrays containing the pixel intensities.}
 Returns a \code{numeric} value of the number of nuclei counted.
 }
 \description{
-The following function is a wrap around \code{\link[EBImage]{getFrame}} to
-select 1 frame to proceed with analysis.
+The following function uses several functions from \code{\link[EBImage]} to
+perform counting of cell nuclei in selected image. *Frame of only nuclei is
+recommended (typically frame #3), counting accurary decrease if composite
+image is used.
 }
 \details{
 When it comes to counting cellular objects (most commonly nuclei),
 The key steps are:
-blur the image
-apply a threshold to turn nuclei into 'blobs'
-count the 'blobs'
+\itemize{
+\item enhance image if objects have week signals or ill-defined edges
+(e.g. blurring turns nuclei into identifiable 'blobs')
+\item apply a threshold to turn Greyscale image binary so every pixel is either 0 or 1
+\item count objects in the foreground (with pixel value of 1)
+}
 }
 \examples{
 # Example 1
@@ -43,5 +48,11 @@ Gregoire Pau, Florian Fuchs, Oleg Sklyar, Michael Boutros, and Wolfgang Huber
 (2010): EBImage - an R package for image processing with applications to
 cellular phenotypes. \emph{Bioinformatics}, 26(7), pp. 979-981,
 \href{https://pubmed.ncbi.nlm.nih.gov/20338898/}{link}
-\url{(https://bioconductor.org/packages/release/bioc/html/EBImage.html}
+\url{https://bioconductor.org/packages/release/bioc/html/EBImage.html}
+
+Xiaolu Yang, Xuanjing Shen, Jianwu Long, Haipeng Chen,
+(2012): An Improved Median-based Otsu Image Thresholding Algorithm,
+\emph{AASRI Procedia},Volume 3, pp. 468-473,
+\href{https://doi.org/10.1016/j.aasri.2012.11.074}{link}
+\url{https://www.sciencedirect.com/science/article/pii/S2212671612002338}
 }
