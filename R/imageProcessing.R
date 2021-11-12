@@ -40,6 +40,9 @@ frameSelect <- function(img, frame_number){
   x = frame_number
   n = numberOfFrames(img)
 
+  # check image file is of suitable type
+  validImage(image_obj)
+
   #check if input is missing
   if(missing(frame_number)){
     stop(
@@ -85,19 +88,23 @@ frameSelect <- function(img, frame_number){
 #'
 #' @examples
 #' # Example 1
-#' # select the nuclei channel in a tiff file
+#' # select nuclei channel in a tiff file
 #' mouse = readImage(system.file('extdata/Mouse_01.tiff', package='MyoManager'))
-#' nuc = getFrame(mouse,3)
+#' mNuc = getFrame(mouse,3)
+#' viewImage(mNuc)
 #'
 #' # apply the blurring brush
-#' img_blur = blurImage(nuc, size = 11, shape = 'gaussian', sigma = 5)
+#' img_blur = blurImage(mNuc, 11, 'gaussian', sigma = 5)
 #'
 #' # visualize blurred nuclei - brightening is optional (for display purpose)
-#' display(img_blur * 2, method = "raster")
+#' viewImage(intensityCtrl(img_blur, 0, 3))
 #'
 #' # Example 2
 #' rabbit = readImage(system.file('extdata/Rabbit_01.tiff', package='MyoManager'))
-#'
+#' rNuc = getFrame(rabbit, 3)
+#' viewImage(rNuc)
+#' img_blur = blurImage(rNuc, 11, 'line')
+#' viewImage(img_blur)
 #'
 #' @references
 #'Gregoire Pau, Florian Fuchs, Oleg Sklyar, Michael Boutros, and Wolfgang Huber
@@ -110,11 +117,14 @@ frameSelect <- function(img, frame_number){
 #' @export
 blurImage <- function(img, brush_size, brush_shape, sigma = 0.3){
 
+  # check image file is of suitable type
+  validImage(img)
+
   # generates a 2D matrix containing the desired brush.
-  w = makeBrush(size = 11, shape = 'gaussian', sigma = sigma)
+  w = makeBrush(size = brush_size, shape = brush_shape, sigma = sigma)
 
   # apply the blurring filter on selected image
-  img_blur = filter2(nuc, w)
+  img = filter2(img, w)
 }
 #'
 #' Simple image manipulations
@@ -126,22 +136,52 @@ blurImage <- function(img, brush_size, brush_shape, sigma = 0.3){
 #' all R mathematical operators. This includes + to control the brightness,
 #' * to control the degree of contrast, or ^ to control the gamma correction parameter.
 #'
-#' @param
-#'
-#' @param
+#' @param img An object of Image class specific to EBImage, stored as multi-
+#' dimensional arrays containing the pixel intensities.
+#' @param brightness A \code{numeric} value containing the level of brightness to be
+#' applied to the image. Default is 0. (no increased/decreased brightness)
+#' @param contrast A \code{numeric} value (>0) containing the degree of contrast to be
+#' applied to the image. Default is 1.(no increased/decreased contrast)
 #'
 #' @examples
-#' # Example 1
+#' # Example 1: decrease brightness and increase contrast
+#' # (good for object identification)
+#' mouse = readImage(system.file('extdata/Mouse_01.tiff', package='MyoManager'))
+#' mNuc = getFrame(mouse, 3)
+#' viewImage(mNuc)
 #'
-#' # Example 2
+#' mouse_enhanced = intensityCtrl(mNuc, -0.2, 3)
+#' viewImage(mouse_enhanced)
 #'
-#' @references
+#' # Example 2: increase brightness and decrease contrast
+#' human =readImage(system.file('extdata/Human_01.tiff', package='MyoManager'))
+#' hNuc = getFrame(human, 3)
+#' viewImage(hNuc)
+#'
+#' human_enhanced = intensityCtrl(hNuc, -0.2, 3)
+#' viewImage(human_enhanced)
 #'
 #' @export
-makePretty <- function(img, brightness, constrast){
+intensityCtrl <- function(img, brightness = 0, contrast = 1){
+
+  # check image file is of suitable type
+  validImage(img)
 
   # check if input is numeric
+  if(!is.numeric(brightness)||!is.numeric(contrast)){
+    stop(
+      paste("brightness and contrast must be numeric.")
+    )
+  }
 
-  img_bright = img*degree
+  # check if contrast is positive
+  if(!missing(contrast)){
+    if(contrast <= 0){
+      stop(
+        paste("contrast must be a numeric value > 0")
+      )
+    }
+  }
+  img = (img + brightness)*contrast
 }
 # [END]

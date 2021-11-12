@@ -29,19 +29,23 @@ edges and/or uneven intensities.
 }
 \examples{
 # Example 1
-# select the nuclei channel in a tiff file
+# select nuclei channel in a tiff file
 mouse = readImage(system.file('extdata/Mouse_01.tiff', package='MyoManager'))
-nuc = getFrame(mouse,3)
+mNuc = getFrame(mouse,3)
+viewImage(mNuc)
 
 # apply the blurring brush
-img_blur = blurImage(nuc, size = 11, shape = 'gaussian', sigma = 5)
+img_blur = blurImage(mNuc, 11, 'gaussian', sigma = 5)
 
 # visualize blurred nuclei - brightening is optional (for display purpose)
-display(img_blur * 2, method = "raster")
+viewImage(intensityCtrl(img_blur, 0, 3))
 
 # Example 2
 rabbit = readImage(system.file('extdata/Rabbit_01.tiff', package='MyoManager'))
-
+rNuc = getFrame(rabbit, 3)
+viewImage(rNuc)
+img_blur = blurImage(rNuc, 11, 'line')
+viewImage(img_blur)
 
 }
 \references{

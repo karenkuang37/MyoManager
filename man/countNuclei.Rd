@@ -9,11 +9,9 @@ countNuclei(img)
 \arguments{
 \item{img}{An object of Image class specific to EBImage, stored as multi-
 dimensional arrays containing the pixel intensities.}
-
-\item{frame_number}{A \code{numeric} value specifying a frame in img.}
 }
 \value{
-
+Returns a \code{numeric} value of the number of nuclei counted.
 }
 \description{
 The following function is a wrap around \code{\link[EBImage]{getFrame}} to
@@ -28,11 +26,16 @@ count the 'blobs'
 }
 \examples{
 # Example 1
-#
-
+rabbit = readImage(system.file('extdata/Rabbit_01.tif', package='MyoManager'))
+rNuc = getFrame(rabbit, 3)
+countNuclei(rNuc)
+viewImage(rNuc)
 
 # Example 2
-
+mouse = readImage(system.file('extdata/Mouse_01.tif', package='MyoManager'))
+mNuc = getFram(mouse, 3)
+countNuclei(mNuc)
+viewImage(mNuce)
 
 }
 \references{
