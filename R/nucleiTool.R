@@ -2,7 +2,7 @@
 #'
 #' The following function uses several functions from \code{\link[EBImage]} to
 #' perform counting of cell nuclei in selected image. *Frame of only nuclei is
-#' recommended (typically frame #3), counting accurary decrease if composite
+#' recommended (typically frame #3), counting accuracy decreases if composite
 #' image is used.
 #'
 #' When it comes to counting cellular objects (most commonly nuclei),

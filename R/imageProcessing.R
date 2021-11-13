@@ -33,12 +33,17 @@
 #'\href{https://pubmed.ncbi.nlm.nih.gov/20338898/}{link}
 #'\url{(https://bioconductor.org/packages/release/bioc/html/EBImage.html}
 #'
-#' @importFrom EBImage getFrame
 #' @export
 frameSelect <- function(img, frame_number){
 
   x = frame_number
-  total_frame_number = dim(img)[3]
+
+  # check image dimensions for total number of frames
+  if(length(dim(img)) == 2){
+    total_frame_number = 1
+  }else{
+    total_frame_number = dim(img)[3]
+  }
 
   # check image file is of suitable type
   validImage(img)
@@ -60,11 +65,15 @@ frameSelect <- function(img, frame_number){
   #check if input is a valid frame number
   if(x<1 || x>total_frame_number){
     stop(
-      paste("frame_number must be between 1 and ", n)
+      paste("frame_number must be between 1 and ", total_frame_number)
     )
   }
 
-  getFrame(img, x)
+  if(total_frame_number > 1){
+    img[,,x]
+  }else{
+    img
+  }
 }
 #'
 #' Private Helper
@@ -115,7 +124,7 @@ is.wholenumber <- function(x, tol = .Machine$double.eps^0.5) {
 #' viewImage(intensityCtrl(img_blur, 0, 3))
 #'
 #' # Example 2
-#' rabbit = readImage(system.file('extdata/Rabbit_01.tiff', package='MyoManager'))
+#' rabbit = readImage(system.file('extdata/Rabbit_01.tif', package='MyoManager'))
 #' rNuc = getFrame(rabbit, 3)
 #' viewImage(rNuc)
 #' img_blur = blurImage(rNuc, 11, 'line')

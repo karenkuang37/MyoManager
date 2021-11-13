@@ -79,10 +79,12 @@ loadImage <- function(image_path) {
   }
 }
 #'
-#' Displays image
+#' Interactive display of image
 #'
 #' Prompts R's graphic display window to open, this device supports single and multi-frame
 #' images as well as different degrees of zoom, making it easy to visualize detailed microscopy data.
+#'
+#' Alternatively use plot(image) command to make a simple graph of the first frame.
 #'
 #' @param image_obj An object of Image class specific to EBImage, stored as multi-
 #' dimensional arrays containing the pixel intensities.
@@ -107,8 +109,7 @@ loadImage <- function(image_path) {
 #'
 #' @importFrom EBImage Image display
 #' @export
-
-viewImage <- function(image_obj, color_mode = c('Greyscale', 'Color'), image_title = NULL){
+viewImage <- function(image_obj, color_mode = c('Grayscale', 'Color'), image_title = NULL){
 
   # check image file is of suitable type
   validImage(image_obj)
@@ -119,20 +120,20 @@ viewImage <- function(image_obj, color_mode = c('Greyscale', 'Color'), image_tit
     # check for correct color mode choice
     if(!is.character(color_mode)){
       stop(
-        paste("color_mode must be either 'Greyscale' or 'Color'.")
+        paste("color_mode must be either 'Grayscale' or 'Color'.")
       )
     }
 
-    if(color_mode == "Greyscale"||color_mode == "Color"){
+    if(color_mode == "Grayscale"||color_mode == "Color"){
       colorMode(image_obj) <- color_mode
     } else {
       stop(
-        paste("color_mode must be either 'Greyscale' or 'Color'.")
+        paste("color_mode must be either 'Grayscale' or 'Color'.")
       )
     }
   }
 
-  EBImage::display(image_obj, title = image_title)
+  suppressWarnings(EBImage::display(image_obj, title = image_title))
 }
 #'
 #' Private Helper

@@ -2,9 +2,9 @@
 % Please edit documentation in R/loadAndDisplay.R
 \name{viewImage}
 \alias{viewImage}
-\title{Displays image}
+\title{Interactive display of image}
 \usage{
-viewImage(image_obj, color_mode = c("Greyscale", "Color"), image_title = NULL)
+viewImage(image_obj, color_mode = c("Grayscale", "Color"), image_title = NULL)
 }
 \arguments{
 \item{image_obj}{An object of Image class specific to EBImage, stored as multi-
@@ -19,4 +19,7 @@ of the image, only how R Graphics displays it. If missing, default to Grayscale.
 \description{
 Prompts R's graphic display window to open, this device supports single and multi-frame
 images as well as different degrees of zoom, making it easy to visualize detailed microscopy data.
+}
+\details{
+Alternatively use plot(image) command to make a simple graph of the first frame.
 }

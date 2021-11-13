@@ -41,7 +41,7 @@ img_blur = blurImage(mNuc, 11, 'gaussian', sigma = 5)
 viewImage(intensityCtrl(img_blur, 0, 3))
 
 # Example 2
-rabbit = readImage(system.file('extdata/Rabbit_01.tiff', package='MyoManager'))
+rabbit = readImage(system.file('extdata/Rabbit_01.tif', package='MyoManager'))
 rNuc = getFrame(rabbit, 3)
 viewImage(rNuc)
 img_blur = blurImage(rNuc, 11, 'line')
