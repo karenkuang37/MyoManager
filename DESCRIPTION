@@ -9,7 +9,9 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Imports: 
-    ggplot2
+    EBImage,
+    magick,
+    berryFunctions,
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
 Depends: R (>= 3.1.0)

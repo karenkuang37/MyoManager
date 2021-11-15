@@ -109,7 +109,7 @@ loadImage <- function(image_path) {
 #'
 #' @importFrom EBImage Image display
 #' @export
-viewImage <- function(image_obj, color_mode = c('Grayscale', 'Color'), image_title = NULL){
+viewImage <- function(image_obj, color_mode = c(Grayscale, Color), image_title = NULL){
 
   # check image file is of suitable type
   validImage(image_obj)
@@ -118,20 +118,35 @@ viewImage <- function(image_obj, color_mode = c('Grayscale', 'Color'), image_tit
   if(!missing(color_mode)){
 
     # check for correct color mode choice
-    if(!is.character(color_mode)){
+    test <- try(color_mode == 0||color_mode == 2, silent = TRUE)
+    iserror <- inherits(test, "try-error")
+    if(iserror){
       stop(
-        paste("color_mode must be either 'Grayscale' or 'Color'.")
+        paste("color_mode must be either Grayscale or Color.")
       )
     }
 
-    if(color_mode == "Grayscale"||color_mode == "Color"){
+    if(color_mode == 0||color_mode == 2){
       colorMode(image_obj) <- color_mode
     } else {
       stop(
-        paste("color_mode must be either 'Grayscale' or 'Color'.")
-      )
+        paste("color_mode must be either Grayscale or Color.")
+        )
     }
   }
+    # if(!is.character(color_mode)){
+    #   stop(
+    #     paste("color_mode must be either 'Grayscale' or 'Color'.")
+    #   )
+    # }
+    #
+    # if(color_mode == "Grayscale"||color_mode == "Color"){
+    #   colorMode(image_obj) <- color_mode
+    # } else {
+    #   stop(
+    #     paste("color_mode must be either 'Grayscale' or 'Color'.")
+    #   )
+    # }
 
   suppressWarnings(EBImage::display(image_obj, title = image_title))
 }

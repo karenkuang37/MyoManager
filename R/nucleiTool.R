@@ -20,13 +20,13 @@
 #' @examples
 #' # Example 1
 #' rabbit = readImage(system.file('extdata/Rabbit_01.tif', package='MyoManager'))
-#' rNuc = getFrame(rabbit, 3)
+#' rNuc = selectFrame(rabbit, 3)
 #' countNuclei(rNuc)
 #' viewImage(rNuc)
 #'
 #' # Example 2
 #' mouse = readImage(system.file('extdata/Mouse_01.tif', package='MyoManager'))
-#' mNuc = getFram(mouse, 3)
+#' mNuc = selectFrame(mouse, 3)
 #' countNuclei(mNuc)
 #' viewImage(mNuce)
 #'
@@ -44,7 +44,6 @@
 #'\url{https://www.sciencedirect.com/science/article/pii/S2212671612002338}
 #'
 #' @importFrom EBImage thresh opening fillHull bwlabel
-#' @importFrom berryFunctions is.error
 #' @export
 
 countNuclei <- function(img){
@@ -53,9 +52,9 @@ countNuclei <- function(img){
   validImage(img)
 
   # use alternative adaptive threshold method if optimal otsu option fails
-  # consider replacing is.error() with trycatch()
-  if(is.error(otsu(img, range = c(-1, 2)))){
-
+  test <- try(otsu(img, range = c(-1, 2)), silent = TRUE)
+  iserror <- inherits(test, "try-error")
+  if(iserror){
     cat(paste("Optimal method cannot support the modified image,",
               "switched to alternative method.",
               "Consider using original greyscale image to improve counting" ,sep="\n"))

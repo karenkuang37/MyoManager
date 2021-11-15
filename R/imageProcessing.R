@@ -1,7 +1,6 @@
-#' (For multi-frame images), frame selection.
+#' Frame selection.
 #'
-#' The following function is a wrap around \code{\link[EBImage]{getFrame}} to
-#' select 1 frame to proceed with analysis.
+#' The following function selects 1 frame from a composite image to proceed with analysis.
 #'
 #' Microscopy data typically comes in multiple frames (or channels), each showing
 #' a different color of fluorescence/immuno-staining (e.g. nuclei, cell body, protein
@@ -16,14 +15,14 @@
 #' # Example 1
 #' # visualize the nuclei channel in a tiff file
 #' human = readImage(system.file('extdata/Human_01.tiff', package='MyoManager'))
-#' nuc = getFrame(human, 3)
+#' nuc = selectFrame(human, 3)
 #' viewImage(nuc)
 #'
 #'
 #' # Example 2
 #' # visualize the fiber(cell body) channel in a jpg image
 #' mouse = readImage(system.file('extdata/Mouse_01.jpg', package='MyoManager'))
-#' fib = getFrame(mouse,2)
+#' fib = selectFrame(mouse,2)
 #' viewImage(nuc)
 #'
 #' @references
@@ -34,7 +33,7 @@
 #'\url{(https://bioconductor.org/packages/release/bioc/html/EBImage.html}
 #'
 #' @export
-frameSelect <- function(img, frame_number){
+selectFrame <- function(img, frame_number){
 
   x = frame_number
 
@@ -48,7 +47,7 @@ frameSelect <- function(img, frame_number){
   # check image file is of suitable type
   validImage(img)
 
-  #check if input is missing
+  # check if input is missing
   if(missing(frame_number)){
     stop(
       paste("please specify frame_number.")
@@ -114,7 +113,7 @@ is.wholenumber <- function(x, tol = .Machine$double.eps^0.5) {
 #' # Example 1
 #' # select nuclei channel in a tiff file
 #' mouse = readImage(system.file('extdata/Mouse_01.tiff', package='MyoManager'))
-#' mNuc = getFrame(mouse,3)
+#' mNuc = selectFrame(mouse,3)
 #' viewImage(mNuc)
 #'
 #' # apply the blurring brush
@@ -125,7 +124,7 @@ is.wholenumber <- function(x, tol = .Machine$double.eps^0.5) {
 #'
 #' # Example 2
 #' rabbit = readImage(system.file('extdata/Rabbit_01.tif', package='MyoManager'))
-#' rNuc = getFrame(rabbit, 3)
+#' rNuc = selectFrame(rabbit, 3)
 #' viewImage(rNuc)
 #' img_blur = blurImage(rNuc, 11, 'line')
 #' viewImage(img_blur)
@@ -171,7 +170,7 @@ blurImage <- function(img, brush_size, brush_shape, sigma = 0.3){
 #' # Example 1: decrease brightness and increase contrast
 #' # (good for object identification)
 #' mouse = readImage(system.file('extdata/Mouse_01.tiff', package='MyoManager'))
-#' mNuc = getFrame(mouse, 3)
+#' mNuc = selectFrame(mouse, 3)
 #' viewImage(mNuc)
 #'
 #' mouse_enhanced = intensityCtrl(mNuc, -0.2, 3)
@@ -179,7 +178,7 @@ blurImage <- function(img, brush_size, brush_shape, sigma = 0.3){
 #'
 #' # Example 2: increase brightness and decrease contrast
 #' human =readImage(system.file('extdata/Human_01.tiff', package='MyoManager'))
-#' hNuc = getFrame(human, 3)
+#' hNuc = selectFrame(human, 3)
 #' viewImage(hNuc)
 #'
 #' human_enhanced = intensityCtrl(hNuc, -0.2, 3)

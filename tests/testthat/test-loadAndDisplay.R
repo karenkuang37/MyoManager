@@ -1,5 +1,4 @@
 context("Loading and displaying images")
-library(TestingPackage)
 
 test_that("valid file from path", {
 

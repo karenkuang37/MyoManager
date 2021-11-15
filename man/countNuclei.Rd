@@ -32,13 +32,13 @@ The key steps are:
 \examples{
 # Example 1
 rabbit = readImage(system.file('extdata/Rabbit_01.tif', package='MyoManager'))
-rNuc = getFrame(rabbit, 3)
+rNuc = selectFrame(rabbit, 3)
 countNuclei(rNuc)
 viewImage(rNuc)
 
 # Example 2
 mouse = readImage(system.file('extdata/Mouse_01.tif', package='MyoManager'))
-mNuc = getFram(mouse, 3)
+mNuc = selectFrame(mouse, 3)
 countNuclei(mNuc)
 viewImage(mNuce)
 

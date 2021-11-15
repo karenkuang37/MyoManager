@@ -31,7 +31,7 @@ all R mathematical operators. This includes + to control the brightness,
 # Example 1: decrease brightness and increase contrast
 # (good for object identification)
 mouse = readImage(system.file('extdata/Mouse_01.tiff', package='MyoManager'))
-mNuc = getFrame(mouse, 3)
+mNuc = selectFrame(mouse, 3)
 viewImage(mNuc)
 
 mouse_enhanced = intensityCtrl(mNuc, -0.2, 3)
@@ -39,7 +39,7 @@ viewImage(mouse_enhanced)
 
 # Example 2: increase brightness and decrease contrast
 human =readImage(system.file('extdata/Human_01.tiff', package='MyoManager'))
-hNuc = getFrame(human, 3)
+hNuc = selectFrame(human, 3)
 viewImage(hNuc)
 
 human_enhanced = intensityCtrl(hNuc, -0.2, 3)

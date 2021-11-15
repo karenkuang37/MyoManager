@@ -31,7 +31,7 @@ edges and/or uneven intensities.
 # Example 1
 # select nuclei channel in a tiff file
 mouse = readImage(system.file('extdata/Mouse_01.tiff', package='MyoManager'))
-mNuc = getFrame(mouse,3)
+mNuc = selectFrame(mouse,3)
 viewImage(mNuc)
 
 # apply the blurring brush
@@ -42,7 +42,7 @@ viewImage(intensityCtrl(img_blur, 0, 3))
 
 # Example 2
 rabbit = readImage(system.file('extdata/Rabbit_01.tif', package='MyoManager'))
-rNuc = getFrame(rabbit, 3)
+rNuc = selectFrame(rabbit, 3)
 viewImage(rNuc)
 img_blur = blurImage(rNuc, 11, 'line')
 viewImage(img_blur)

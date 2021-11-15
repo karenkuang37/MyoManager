@@ -4,7 +4,7 @@
 \alias{viewImage}
 \title{Interactive display of image}
 \usage{
-viewImage(image_obj, color_mode = c("Grayscale", "Color"), image_title = NULL)
+viewImage(image_obj, color_mode = c(Grayscale, Color), image_title = NULL)
 }
 \arguments{
 \item{image_obj}{An object of Image class specific to EBImage, stored as multi-
