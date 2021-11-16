@@ -14,14 +14,14 @@
 #' @examples
 #' # Example 1
 #' # visualize the nuclei channel in a tiff file
-#' human = readImage(system.file('extdata/Human_01.tiff', package='MyoManager'))
+#' human = loadImage(system.file('extdata/Human_01.tiff', package='MyoManager'))
 #' nuc = selectFrame(human, 3)
 #' viewImage(nuc)
 #'
 #'
 #' # Example 2
 #' # visualize the fiber(cell body) channel in a jpg image
-#' mouse = readImage(system.file('extdata/Mouse_01.jpg', package='MyoManager'))
+#' mouse = loadImage(system.file('extdata/Mouse_01.jpg', package='MyoManager'))
 #' fib = selectFrame(mouse,2)
 #' viewImage(nuc)
 #'
@@ -86,6 +86,7 @@ selectFrame <- function(img, frame_number){
 #' \href{https://www.R-project.org/}{link}.
 #'
 #' @param x A numeric value to be tested upon.
+#' @param tol A default tolerance level.
 is.wholenumber <- function(x, tol = .Machine$double.eps^0.5) {
   abs(x - round(x)) < tol
 }
@@ -102,7 +103,7 @@ is.wholenumber <- function(x, tol = .Machine$double.eps^0.5) {
 #' @param brush_size A \code{numeric} value containing the size of the brush
 #'  in pixels. This should be an odd number; even numbers are rounded to the
 #'  next odd one, i.e., size = 4 has the same effect as size = 5. Default is 5.
-#' @param brush_shape A \cold{character} vector indicating the shape of the brush.
+#' @param brush_shape A \code{character} vector indicating the shape of the brush.
 #' Can be box, disc, diamond,Gaussian or line. Default is box.
 #' @param sigma An optional numeric containing the standard deviation of the
 #' Gaussian shape.This argument is relevant only for the
@@ -112,7 +113,7 @@ is.wholenumber <- function(x, tol = .Machine$double.eps^0.5) {
 #' @examples
 #' # Example 1
 #' # select nuclei channel in a tiff file
-#' mouse = readImage(system.file('extdata/Mouse_01.tiff', package='MyoManager'))
+#' mouse = loadImage(system.file('extdata/Mouse_01.tiff', package='MyoManager'))
 #' mNuc = selectFrame(mouse,3)
 #' viewImage(mNuc)
 #'
@@ -123,7 +124,7 @@ is.wholenumber <- function(x, tol = .Machine$double.eps^0.5) {
 #' viewImage(intensityCtrl(img_blur, 0, 3))
 #'
 #' # Example 2
-#' rabbit = readImage(system.file('extdata/Rabbit_01.tif', package='MyoManager'))
+#' rabbit = loadImage(system.file('extdata/Rabbit_01.tif', package='MyoManager'))
 #' rNuc = selectFrame(rabbit, 3)
 #' viewImage(rNuc)
 #' img_blur = blurImage(rNuc, 11, 'line')
@@ -169,7 +170,7 @@ blurImage <- function(img, brush_size, brush_shape, sigma = 0.3){
 #' @examples
 #' # Example 1: decrease brightness and increase contrast
 #' # (good for object identification)
-#' mouse = readImage(system.file('extdata/Mouse_01.tiff', package='MyoManager'))
+#' mouse = loadImage(system.file('extdata/Mouse_01.tiff', package='MyoManager'))
 #' mNuc = selectFrame(mouse, 3)
 #' viewImage(mNuc)
 #'
@@ -177,7 +178,7 @@ blurImage <- function(img, brush_size, brush_shape, sigma = 0.3){
 #' viewImage(mouse_enhanced)
 #'
 #' # Example 2: increase brightness and decrease contrast
-#' human =readImage(system.file('extdata/Human_01.tiff', package='MyoManager'))
+#' human =loadImage(system.file('extdata/Human_01.tiff', package='MyoManager'))
 #' hNuc = selectFrame(human, 3)
 #' viewImage(hNuc)
 #'

@@ -24,14 +24,14 @@ structures, while individual frames are typically shown in greyscale.
 \examples{
 # Example 1
 # visualize the nuclei channel in a tiff file
-human = readImage(system.file('extdata/Human_01.tiff', package='MyoManager'))
+human = loadImage(system.file('extdata/Human_01.tiff', package='MyoManager'))
 nuc = selectFrame(human, 3)
 viewImage(nuc)
 
 
 # Example 2
 # visualize the fiber(cell body) channel in a jpg image
-mouse = readImage(system.file('extdata/Mouse_01.jpg', package='MyoManager'))
+mouse = loadImage(system.file('extdata/Mouse_01.jpg', package='MyoManager'))
 fib = selectFrame(mouse,2)
 viewImage(nuc)
 

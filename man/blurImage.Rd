@@ -14,7 +14,7 @@ dimensional arrays containing the pixel intensities.}
 in pixels. This should be an odd number; even numbers are rounded to the
 next odd one, i.e., size = 4 has the same effect as size = 5. Default is 5.}
 
-\item{brush_shape}{A \cold{character} vector indicating the shape of the brush.
+\item{brush_shape}{A \code{character} vector indicating the shape of the brush.
 Can be box, disc, diamond,Gaussian or line. Default is box.}
 
 \item{sigma}{An optional numeric containing the standard deviation of the
@@ -30,7 +30,7 @@ edges and/or uneven intensities.
 \examples{
 # Example 1
 # select nuclei channel in a tiff file
-mouse = readImage(system.file('extdata/Mouse_01.tiff', package='MyoManager'))
+mouse = loadImage(system.file('extdata/Mouse_01.tiff', package='MyoManager'))
 mNuc = selectFrame(mouse,3)
 viewImage(mNuc)
 
@@ -41,7 +41,7 @@ img_blur = blurImage(mNuc, 11, 'gaussian', sigma = 5)
 viewImage(intensityCtrl(img_blur, 0, 3))
 
 # Example 2
-rabbit = readImage(system.file('extdata/Rabbit_01.tif', package='MyoManager'))
+rabbit = loadImage(system.file('extdata/Rabbit_01.tif', package='MyoManager'))
 rNuc = selectFrame(rabbit, 3)
 viewImage(rNuc)
 img_blur = blurImage(rNuc, 11, 'line')

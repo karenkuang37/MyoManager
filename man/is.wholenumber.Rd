@@ -8,6 +8,8 @@ is.wholenumber(x, tol = .Machine$double.eps^0.5)
 }
 \arguments{
 \item{x}{A numeric value to be tested upon.}
+
+\item{tol}{A default tolerance level.}
 }
 \description{
 R's base function is.integer(x) does not test if x contains integer numbers.
