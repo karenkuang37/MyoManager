@@ -2,7 +2,7 @@
 % Please edit documentation in R/nucleiTool.R
 \name{getFeatureData}
 \alias{getFeatureData}
-\title{Count the number of distinct objects in an image (nuclei)}
+\title{Generate a data frame of nuclei shape and size features}
 \usage{
 getFeatureData(img)
 }
@@ -10,36 +10,33 @@ getFeatureData(img)
 \item{img}{A single-frame Grayscale \code{Image} containing ONLY the nuclei.}
 }
 \value{
-Returns a \code{numeric} value of the number of nuclei counted.
+Returns a \code{data frame} containing area, perimeter, mean radius, and
+eccentricity of each nuclei objects in the \code{Image}.
 }
 \description{
-The following function uses several functions from \code{\link[EBImage]} to
-perform counting of cell nuclei in selected image. *Frame of only nuclei is
-recommended (typically frame #3), counting accuracy decreases if composite
-image is used.
+The following function uses \code{computeFunction} and \code{computeFunction.shape}
+from \code{\link[EBImage]} tp produce a data frame containing the following features:
+area, perimeter, mean radius, and eccentricity. ( elliptical eccentricity defined by
+sqrt(1-minoraxis^2/majoraxis^2). This value approaches 0 for rounder objects and 1 for
+elongated objects.
 }
 \details{
-When it comes to counting cellular objects (most commonly nuclei),
-The key steps are:
-\itemize{
-\item enhance image if objects have week signals or ill-defined edges
-(e.g. blurring turns nuclei into identifiable 'blobs')
-\item apply a threshold to turn Greyscale image binary so every pixel is either 0 or 1
-\item count objects in the foreground (with pixel value of 1)
-}
+*Note Frame of only nuclei (typically frame #3 of composite image) is needed, since
+feature data extraction can only be performed on single-frame Grayscale images with
+defined binary objects.
 }
 \examples{
 # Example 1
 rabbit = readImage(system.file('extdata/Rabbit_01.tif', package='MyoManager'))
 rNuc = selectFrame(rabbit, 3)
-countNuclei(rNuc)
-viewImage(rNuc)
+rNucFeatures_df = getFeatureData(rNuc)
+View(rNucFeatures_df)
 
 # Example 2
-mouse = readImage(system.file('extdata/Mouse_01.tif', package='MyoManager'))
+mouse = readImage(system.file('extdata/Mouse_01.tiff', package='MyoManager'))
 mNuc = selectFrame(mouse, 3)
-countNuclei(mNuc)
-viewImage(mNuce)
+mNucFeatures_df = getFeatureData(mNuc)
+View(mNucFeatures_df)
 
 }
 \references{
@@ -48,10 +45,4 @@ Gregoire Pau, Florian Fuchs, Oleg Sklyar, Michael Boutros, and Wolfgang Huber
 cellular phenotypes. \emph{Bioinformatics}, 26(7), pp. 979-981,
 \href{https://pubmed.ncbi.nlm.nih.gov/20338898/}{link}
 \url{https://bioconductor.org/packages/release/bioc/html/EBImage.html}
-
-Xiaolu Yang, Xuanjing Shen, Jianwu Long, Haipeng Chen,
-(2012): An Improved Median-based Otsu Image Thresholding Algorithm,
-\emph{AASRI Procedia},Volume 3, pp. 468-473,
-\href{https://doi.org/10.1016/j.aasri.2012.11.074}{link}
-\url{https://www.sciencedirect.com/science/article/pii/S2212671612002338}
 }

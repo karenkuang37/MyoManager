@@ -2,44 +2,30 @@
 % Please edit documentation in R/nucleiTool.R
 \name{plotFeature}
 \alias{plotFeature}
-\title{Count the number of distinct objects in an image (nuclei)}
+\title{Plot a shape/size feature of nuclei objects.}
 \usage{
 plotFeature(featureDF, feature = c("area", "perimeter", "radius", "roundness"))
 }
 \arguments{
-\item{img}{A single-frame Grayscale \code{Image} containing ONLY the nuclei.}
-}
-\value{
-Returns a \code{numeric} value of the number of nuclei counted.
+\item{featureDF}{A \code{data frame} containing four columns of shape/size features for
+each nuclei objects in an \code{Image}.}
+
+\item{feature}{A \code{character} vector indicating which feature to plot, can be
+area, perimeter, radius, or roundness.}
 }
 \description{
-The following function uses several functions from \code{\link[EBImage]} to
-perform counting of cell nuclei in selected image. *Frame of only nuclei is
-recommended (typically frame #3), counting accuracy decreases if composite
-image is used.
-}
-\details{
-When it comes to counting cellular objects (most commonly nuclei),
-The key steps are:
-\itemize{
-\item enhance image if objects have week signals or ill-defined edges
-(e.g. blurring turns nuclei into identifiable 'blobs')
-\item apply a threshold to turn Greyscale image binary so every pixel is either 0 or 1
-\item count objects in the foreground (with pixel value of 1)
-}
+The following function plots the density distribution of one of four shape/size features
+of cell nuceli computed from getFeatureData(): area, perimeter, radius, or eccentricity.
 }
 \examples{
 # Example 1
 rabbit = readImage(system.file('extdata/Rabbit_01.tif', package='MyoManager'))
 rNuc = selectFrame(rabbit, 3)
-countNuclei(rNuc)
-viewImage(rNuc)
+df = getFeatureData(rNuc)
+plotFeature(df, "area")
 
 # Example 2
-mouse = readImage(system.file('extdata/Mouse_01.tif', package='MyoManager'))
-mNuc = selectFrame(mouse, 3)
-countNuclei(mNuc)
-viewImage(mNuce)
+plotFeature(df, "roundness")
 
 }
 \references{
@@ -48,10 +34,4 @@ Gregoire Pau, Florian Fuchs, Oleg Sklyar, Michael Boutros, and Wolfgang Huber
 cellular phenotypes. \emph{Bioinformatics}, 26(7), pp. 979-981,
 \href{https://pubmed.ncbi.nlm.nih.gov/20338898/}{link}
 \url{https://bioconductor.org/packages/release/bioc/html/EBImage.html}
-
-Xiaolu Yang, Xuanjing Shen, Jianwu Long, Haipeng Chen,
-(2012): An Improved Median-based Otsu Image Thresholding Algorithm,
-\emph{AASRI Procedia},Volume 3, pp. 468-473,
-\href{https://doi.org/10.1016/j.aasri.2012.11.074}{link}
-\url{https://www.sciencedirect.com/science/article/pii/S2212671612002338}
 }
