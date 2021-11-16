@@ -238,7 +238,7 @@ plotFeature <- function(featureDF, feature = c("area", "perimeter", "radius", "r
   }
   plot
 }
-#' Plot a matrix of pariwise shape/size feature of nuclei objects.
+#' Plot a matrix of pairwise shape/size feature of nuclei objects.
 #'
 #' The following function plots a matrix of pairwise scatter plots and density distribution
 #' of the four shape/size features of cell nuclei computed from getFeatureData():

@@ -134,20 +134,6 @@ viewImage <- function(image_obj, color_mode = c(Grayscale, Color), image_title =
         )
     }
   }
-    # if(!is.character(color_mode)){
-    #   stop(
-    #     paste("color_mode must be either 'Grayscale' or 'Color'.")
-    #   )
-    # }
-    #
-    # if(color_mode == "Grayscale"||color_mode == "Color"){
-    #   colorMode(image_obj) <- color_mode
-    # } else {
-    #   stop(
-    #     paste("color_mode must be either 'Grayscale' or 'Color'.")
-    #   )
-    # }
-
   suppressWarnings(EBImage::display(image_obj, title = image_title))
 }
 #'
