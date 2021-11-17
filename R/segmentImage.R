@@ -24,7 +24,7 @@
 #' # Example 1
 #' rabbit <- loadImage(system.file('extdata/Rabbit_01.tif', package = 'MyoManager'))
 #' # view image in Grayscale to find out which Frame stores cell body / nuclei
-#' viewImage(rabbit, Grayscale)
+#' viewImage(rabbit, 0)
 #' segmented_nuc <- segmentImage(rabbit, 1, 3, 'nuclei')
 #' # only nuclei segmentation is generated
 #' viewImage(segmented_nuc)
@@ -32,7 +32,7 @@
 #'
 #' # Example 2
 #' mouse <- loadImage(system.file('extdata/Mouse_01.tiff', package = 'MyoManager'))
-#' viewImage(mouse, Grayscale)
+#' viewImage(mouse, 0)
 #' segmented_nuc <- segmentImage(mouse, 2, 3)
 #' # cell segmentation with highlighted nuclei is generated
 #' viewImage(segmented_nuc)

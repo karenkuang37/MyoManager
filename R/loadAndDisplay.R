@@ -1,6 +1,6 @@
 # utils::globalVariables(c("Grayscale", "Color"))
-Grayscale = EBImage::Grayscale
-Color = EBImage::Color
+# Grayscale = EBImage::Grayscale
+# Color = EBImage::Color
 #' Loading images
 #'
 #' The following function is a wrap around \code{\link[magick]{image_read}} and
@@ -91,9 +91,10 @@ loadImage <- function(image_path) {
 #'
 #' @param image_obj An object of Image class specific to EBImage, stored as multi-
 #' dimensional arrays containing the pixel intensities.
-#' @param color_mode A \code{character} string containing the color mode of the image
-#' which can be either Grayscale or Color. *Note it does not change the pixel values
-#' of the image, only how R Graphics displays it. If missing, default to Grayscale.
+#' @param color_mode A \code{numeric} string containing the color mode of the image
+#' which can be either \emph{0} for Grayscale or \emph{2} for Color. *Note it does
+#' not change the pixel values of the image, only how R Graphics displays it.
+#' If missing, default to Grayscale.
 #' @param image_title A \code{character} string specifying the title of the display image.
 #'
 #' @example
@@ -103,18 +104,18 @@ loadImage <- function(image_path) {
 #' #for tiff images with multiple channels, click to scroll through the frames
 #' library(MyoManager)
 #' mouse <- loadImage(system.file('extdata/Mouse_01.tiff', package='MyoManager'))
-#' viewImage(image, Color)
+#' viewImage(image, 2)
 #'
 #' #Example 2
 #' #display a sample jpeg from source link
 #' library(MyoManager)
 #' rabbit <- loadImage("https://user-images.githubusercontent.com/60583839/141215629-f19d4a77-c5f0-491f-9262-b22cd59739e3.jpg")
-#' viewImage(image, Grayscale)
+#' viewImage(image, 0)
 #'}
-#' @importFrom EBImage Image display Color Grayscale colorMode<-
+#' @importFrom EBImage Image display colorMode colorMode<-
 #' @export
 #'
-viewImage <- function(image_obj, color_mode = c(Grayscale, Color), image_title = NULL){
+viewImage <- function(image_obj, color_mode = c(0, 2), image_title = NULL){
 
   # Grayscale = 0L
   # Color = 2L
@@ -130,7 +131,7 @@ viewImage <- function(image_obj, color_mode = c(Grayscale, Color), image_title =
     iserror <- inherits(test, "try-error")
     if(iserror){
       stop(
-        paste("color_mode must be either Grayscale or Color.")
+        paste("color_mode must be either 0 (Grayscale) or 2 (Color).")
       )
     }
 
@@ -138,7 +139,7 @@ viewImage <- function(image_obj, color_mode = c(Grayscale, Color), image_title =
       colorMode(image_obj) <- color_mode
     } else {
       stop(
-        paste("color_mode must be either Grayscale or Color.")
+        paste("color_mode must be either 0 (Grayscale) or 2 (Color).")
         )
     }
   }

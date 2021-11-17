@@ -4,15 +4,16 @@
 \alias{viewImage}
 \title{Interactive display of image}
 \usage{
-viewImage(image_obj, color_mode = c(Grayscale, Color), image_title = NULL)
+viewImage(image_obj, color_mode = c(0, 2), image_title = NULL)
 }
 \arguments{
 \item{image_obj}{An object of Image class specific to EBImage, stored as multi-
 dimensional arrays containing the pixel intensities.}
 
-\item{color_mode}{A \code{character} string containing the color mode of the image
-which can be either Grayscale or Color. *Note it does not change the pixel values
-of the image, only how R Graphics displays it. If missing, default to Grayscale.}
+\item{color_mode}{A \code{numeric} string containing the color mode of the image
+which can be either \emph{0} for Grayscale or \emph{2} for Color. *Note it does
+not change the pixel values of the image, only how R Graphics displays it.
+If missing, default to Grayscale.}
 
 \item{image_title}{A \code{character} string specifying the title of the display image.}
 }
