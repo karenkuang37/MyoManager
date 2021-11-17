@@ -1,4 +1,5 @@
 context("Loading and displaying images")
+library(MyoManager)
 
 test_that("valid file from path", {
 
