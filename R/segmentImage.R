@@ -50,7 +50,7 @@
 #'CellProfiler software: \url{http://www.cellprofiler.org}
 #'
 #'
-#' @importFrom EBImage Image otsu fillHull bwlabel opening propagate paintObjects
+#' @importFrom EBImage Image otsu fillHull bwlabel opening propagate paintObjects colorMode colorMode
 #' @export
 segmentImage <- function(img,
                          cell_frame,

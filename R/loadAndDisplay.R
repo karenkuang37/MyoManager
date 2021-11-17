@@ -1,4 +1,6 @@
-utils::globalVariables(c("Grayscale", "Color"))
+# utils::globalVariables(c("Grayscale", "Color"))
+Grayscale = EBImage::Grayscale
+Color = EBImage::Color
 #' Loading images
 #'
 #' The following function is a wrap around \code{\link[magick]{image_read}} and
@@ -21,13 +23,13 @@ utils::globalVariables(c("Grayscale", "Color"))
 #' library(MyoManager)
 #' image <- loadImage(system.file('extdata/Human_01.tiff', package = 'MyoManager'))
 #'
-#' \dontrun{
+#'
 #' # Example 2
 #' #load sample jpeg from public link
 #' library(MyoManager)
 #' image <- loadImage("https://user-images.githubusercontent.com/60583839/141215629-f19d4a77-c5f0-491f-9262-b22cd59739e3.jpg")
 #'
-#'}
+#'
 #' @references
 #'Jeroen Ooms (2021). magick: Advanced Graphics and Image-Processing in R. R
 #'package version 2.7.3. \href{https://CRAN.R-project.org/package=magick}{link}
@@ -100,18 +102,22 @@ loadImage <- function(image_path) {
 #' #display a sample tiff distributed with the package
 #' #for tiff images with multiple channels, click to scroll through the frames
 #' library(MyoManager)
-#' image <- loadImage(system.file('extdata/Mouse_01.tiff', package='MyoManager'))
-#' viewImage(image, "Color", "Mouse")
+#' mouse <- loadImage(system.file('extdata/Mouse_01.tiff', package='MyoManager'))
+#' viewImage(image, Color)
 #'
 #' #Example 2
 #' #display a sample jpeg from source link
 #' library(MyoManager)
-#' image <- loadImage("https://user-images.githubusercontent.com/60583839/141215629-f19d4a77-c5f0-491f-9262-b22cd59739e3.jpg")
-#' viewImage(image, "Greyscale, "rabbit")
+#' rabbit <- loadImage("https://user-images.githubusercontent.com/60583839/141215629-f19d4a77-c5f0-491f-9262-b22cd59739e3.jpg")
+#' viewImage(image, Grayscale)
 #'}
-#' @importFrom EBImage Image display
+#' @importFrom EBImage Image display Color Grayscale colorMode<-
 #' @export
+#'
 viewImage <- function(image_obj, color_mode = c(Grayscale, Color), image_title = NULL){
+
+  # Grayscale = 0L
+  # Color = 2L
 
   # check image file is of suitable type
   validImage(image_obj)

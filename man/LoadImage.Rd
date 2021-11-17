@@ -30,13 +30,13 @@ maximizing display functionalities.
 library(MyoManager)
 image <- loadImage(system.file('extdata/Human_01.tiff', package = 'MyoManager'))
 
-\dontrun{
+
 # Example 2
 #load sample jpeg from public link
 library(MyoManager)
 image <- loadImage("https://user-images.githubusercontent.com/60583839/141215629-f19d4a77-c5f0-491f-9262-b22cd59739e3.jpg")
 
-}
+
 }
 \references{
 Jeroen Ooms (2021). magick: Advanced Graphics and Image-Processing in R. R

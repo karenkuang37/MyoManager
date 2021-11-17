@@ -43,7 +43,7 @@ utils::globalVariables(c("colorMode", "aes", "s.area", "..density..", "margin", 
 #'\href{https://doi.org/10.1016/j.aasri.2012.11.074}{link}
 #'\url{https://www.sciencedirect.com/science/article/pii/S2212671612002338}
 #'
-#' @importFrom EBImage colorMode thresh opening fillHull bwlabel
+#' @importFrom EBImage colorMode colorMode<- thresh opening fillHull bwlabel
 #' @export
 countNuclei <- function(img){
 
@@ -117,7 +117,7 @@ countNuclei <- function(img){
 #'\href{https://pubmed.ncbi.nlm.nih.gov/20338898/}{link}
 #'\url{https://bioconductor.org/packages/release/bioc/html/EBImage.html}
 #'
-#' @importFrom EBImage colorMode otsu fillHull bwlabel computeFeatures computeFeatures.shape
+#' @importFrom EBImage colorMode colorMode<- otsu fillHull bwlabel computeFeatures computeFeatures.shape
 #' @importFrom dplyr arrange
 #' @export
 getFeatureData <- function(img){
