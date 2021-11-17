@@ -29,7 +29,7 @@ Default is both.}
 Returns an \code{Image} containing the segmented structure(s).
 }
 \description{
-The following function uses several functions from \code{\link[EBImage]} to
+The following function uses several functions from \code{EBImage} to
 perform image segmentation with the provided frame numbers of cell and nuclei
 channels.
 }

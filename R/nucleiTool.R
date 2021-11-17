@@ -1,6 +1,7 @@
+utils::globalVariables(c("colorMode", "aes", "s.area", "..density..", "margin", "element_rect", "s.perimeter", "s.radius.mean", "s.eccentricity", "%>%", "wrap"))
 #' Count the number of distinct objects in an image (nuclei)
 #'
-#' The following function uses several functions from \code{\link[EBImage]} to
+#' The following function uses several functions from \code{EBImage} to
 #' perform counting of cell nuclei in selected image. *Frame of only nuclei is
 #' recommended (typically frame #3), counting accuracy decreases if composite
 #' image is used.
@@ -18,16 +19,16 @@
 #'
 #' @examples
 #' # Example 1
-#' rabbit = readImage(system.file('extdata/Rabbit_01.tif', package='MyoManager'))
+#' rabbit = loadImage(system.file('extdata/Rabbit_01.tif', package='MyoManager'))
 #' rNuc = selectFrame(rabbit, 3)
 #' countNuclei(rNuc)
 #' viewImage(rNuc)
 #'
 #' # Example 2
-#' mouse = readImage(system.file('extdata/Mouse_01.tif', package='MyoManager'))
+#' mouse = loadImage(system.file('extdata/Mouse_01.tiff', package='MyoManager'))
 #' mNuc = selectFrame(mouse, 3)
 #' countNuclei(mNuc)
-#' viewImage(mNuce)
+#' viewImage(mNuc)
 #'
 #' @references
 #'Gregoire Pau, Florian Fuchs, Oleg Sklyar, Michael Boutros, and Wolfgang Huber
@@ -42,7 +43,7 @@
 #'\href{https://doi.org/10.1016/j.aasri.2012.11.074}{link}
 #'\url{https://www.sciencedirect.com/science/article/pii/S2212671612002338}
 #'
-#' @importFrom EBImage thresh opening fillHull bwlabel
+#' @importFrom EBImage colorMode thresh opening fillHull bwlabel
 #' @export
 countNuclei <- function(img){
 
@@ -81,7 +82,7 @@ countNuclei <- function(img){
 #' Generate a data frame of nuclei shape and size features
 #'
 #' The following function uses \code{computeFunction} and \code{computeFunction.shape}
-#' from \code{\link[EBImage]} tp produce a data frame containing the following features:
+#' from \code{EBImage} tp produce a data frame containing the following features:
 #' area, perimeter, mean radius, and eccentricity. ( elliptical eccentricity defined by
 #' sqrt(1-minoraxis^2/majoraxis^2). This value approaches 0 for rounder objects and 1 for
 #' elongated objects.
@@ -96,18 +97,19 @@ countNuclei <- function(img){
 #' eccentricity of each nuclei objects in the \code{Image}.
 #'
 #' @examples
+#' \dontrun{
 #' # Example 1
-#' rabbit = readImage(system.file('extdata/Rabbit_01.tif', package='MyoManager'))
+#' rabbit = loadImage(system.file('extdata/Rabbit_01.tif', package='MyoManager'))
 #' rNuc = selectFrame(rabbit, 3)
 #' rNucFeatures_df = getFeatureData(rNuc)
 #' View(rNucFeatures_df)
 #'
 #' # Example 2
-#' mouse = readImage(system.file('extdata/Mouse_01.tiff', package='MyoManager'))
+#' mouse = loadImage(system.file('extdata/Mouse_01.tiff', package='MyoManager'))
 #' mNuc = selectFrame(mouse, 3)
 #' mNucFeatures_df = getFeatureData(mNuc)
 #' View(mNucFeatures_df)
-#'
+#'}
 #' @references
 #'Gregoire Pau, Florian Fuchs, Oleg Sklyar, Michael Boutros, and Wolfgang Huber
 #'(2010): EBImage - an R package for image processing with applications to
@@ -115,7 +117,7 @@ countNuclei <- function(img){
 #'\href{https://pubmed.ncbi.nlm.nih.gov/20338898/}{link}
 #'\url{https://bioconductor.org/packages/release/bioc/html/EBImage.html}
 #'
-#' @importFrom EBImage Image otsu fillHull bwlabel computeFeatures computeFeatures.shape
+#' @importFrom EBImage colorMode otsu fillHull bwlabel computeFeatures computeFeatures.shape
 #' @importFrom dplyr arrange
 #' @export
 getFeatureData <- function(img){
@@ -159,15 +161,16 @@ getFeatureData <- function(img){
 #' area, perimeter, radius, or roundness.
 #'
 #' @examples
+#' \dontrun{
 #' # Example 1
-#' rabbit = readImage(system.file('extdata/Rabbit_01.tif', package='MyoManager'))
+#' rabbit = loadImage(system.file('extdata/Rabbit_01.tif', package='MyoManager'))
 #' rNuc = selectFrame(rabbit, 3)
 #' df = getFeatureData(rNuc)
 #' plotFeature(df, "area")
 #'
 #' # Example 2
 #' plotFeature(df, "roundness")
-#'
+#'}
 #' @references
 #'Gregoire Pau, Florian Fuchs, Oleg Sklyar, Michael Boutros, and Wolfgang Huber
 #'(2010): EBImage - an R package for image processing with applications to
@@ -176,6 +179,7 @@ getFeatureData <- function(img){
 #'\url{https://bioconductor.org/packages/release/bioc/html/EBImage.html}
 #'
 #' @importFrom ggplot2 ggplot geom_density ggtitle theme labs
+#' @importFrom methods is
 #' @export
 plotFeature <- function(featureDF, feature = c("area", "perimeter", "radius", "roundness")){
 
@@ -248,18 +252,19 @@ plotFeature <- function(featureDF, feature = c("area", "perimeter", "radius", "r
 #' each nuclei objects in an \code{Image}.
 #'
 #' @examples
+#' \dontrun{
 #' # Example 1
-#' rabbit = readImage(system.file('extdata/Rabbit_01.tif', package='MyoManager'))
+#' rabbit = loadImage(system.file('extdata/Rabbit_01.tif', package='MyoManager'))
 #' rNuc = selectFrame(rabbit, 3)
 #' rNuc_df = getFeatureData(rNuc)
 #' plotFeatureMatrix(rNuc_df)
 #'
 #' # Example 2
-#' mouse = readImage(system.file('extdata/Mouse_01.tif', package='MyoManager'))
+#' mouse = loadImage(system.file('extdata/Mouse_01.tiff', package='MyoManager'))
 #' mNuc = selectFrame(mouse, 3)
 #' mNuc_df = getFeatureData(mNuc)
 #' plotFeatureMatrix(mNuc_df)
-#'
+#'}
 #' @references
 #'Gregoire Pau, Florian Fuchs, Oleg Sklyar, Michael Boutros, and Wolfgang Huber
 #'(2010): EBImage - an R package for image processing with applications to
@@ -268,6 +273,7 @@ plotFeature <- function(featureDF, feature = c("area", "perimeter", "radius", "r
 #'\url{https://bioconductor.org/packages/release/bioc/html/EBImage.html}
 #'
 #' @importFrom GGally ggpairs
+#' @importFrom methods is
 #' @export
 plotFeatureMatrix <- function(featureDF){
 

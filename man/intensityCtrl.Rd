@@ -44,5 +44,4 @@ viewImage(hNuc)
 
 human_enhanced = intensityCtrl(hNuc, -0.2, 3)
 viewImage(human_enhanced)
-
 }

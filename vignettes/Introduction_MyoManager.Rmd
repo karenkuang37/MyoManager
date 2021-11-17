@@ -46,9 +46,7 @@ Functions __*loadImage*__ and __*viewImage*__ from __loadAndDisplay__ allow user
 
 Functions from  __imageProcessing__  permits users to perform simple manipulations including frame selection, blurring, brightening/dimming, and increasing contrast to enhance the visual quality of microscopy images. These steps can serve as preparations for image analysis. 
 
-Function __*segmentImage*__ is available to produce segmented visuals of cell and nuclei shapes. Segmentation of individual image channels is often useful when it is difficult
-to distinguish cell shape and structures by eye. (e.g. Visualizing segmentation helps users
-locate nuclei within a mesh of muscle fibers)
+Function __*segmentImage*__ is available to produce segmented visuals of cell and nuclei shapes. Segmentation of individual image channels is often useful when it is difficult to distinguish cell shape and structures by eye. (e.g. Visualizing segmentation helps users locate nuclei within a mesh of muscle fibers)
 
 Function __*countNuclei*__ implements the major task of counting the number of nuclei objects in an image....keep writing 
 
@@ -57,7 +55,7 @@ The shiny implementation of *MyoManager* is available as __*runMyoManager*__ (no
 
 See `help(package = "MyoManager")` for further details and references provided by `citation("MyoManager")`. To download **MyoManager**, use the following commands:
 
-``` r
+```{r eval=FALSE}
 require("devtools")
 install_github("karenkuang37/MyoManager", build_vignettes = TRUE)
 library("MyoManager")

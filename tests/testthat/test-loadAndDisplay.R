@@ -1,4 +1,3 @@
-context("Loading and displaying images")
 library(MyoManager)
 
 test_that("valid file from path", {
@@ -32,7 +31,6 @@ test_that("multiple valid files from path/url", {
   expect_s4_class(img_set[[1]], "Image")
 })
 
-context("Checking for invalid user input for load and display functions")
 test_that("invalid source path", {
 
   fish <- system.file('extdata/zebrafish_01.tiff', package = 'MyoManager')

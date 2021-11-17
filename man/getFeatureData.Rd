@@ -15,7 +15,7 @@ eccentricity of each nuclei objects in the \code{Image}.
 }
 \description{
 The following function uses \code{computeFunction} and \code{computeFunction.shape}
-from \code{\link[EBImage]} tp produce a data frame containing the following features:
+from \code{EBImage} tp produce a data frame containing the following features:
 area, perimeter, mean radius, and eccentricity. ( elliptical eccentricity defined by
 sqrt(1-minoraxis^2/majoraxis^2). This value approaches 0 for rounder objects and 1 for
 elongated objects.
@@ -26,18 +26,19 @@ feature data extraction can only be performed on single-frame Grayscale images w
 defined binary objects.
 }
 \examples{
+\dontrun{
 # Example 1
-rabbit = readImage(system.file('extdata/Rabbit_01.tif', package='MyoManager'))
+rabbit = loadImage(system.file('extdata/Rabbit_01.tif', package='MyoManager'))
 rNuc = selectFrame(rabbit, 3)
 rNucFeatures_df = getFeatureData(rNuc)
 View(rNucFeatures_df)
 
 # Example 2
-mouse = readImage(system.file('extdata/Mouse_01.tiff', package='MyoManager'))
+mouse = loadImage(system.file('extdata/Mouse_01.tiff', package='MyoManager'))
 mNuc = selectFrame(mouse, 3)
 mNucFeatures_df = getFeatureData(mNuc)
 View(mNucFeatures_df)
-
+}
 }
 \references{
 Gregoire Pau, Florian Fuchs, Oleg Sklyar, Michael Boutros, and Wolfgang Huber

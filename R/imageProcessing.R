@@ -35,6 +35,9 @@
 #' @export
 selectFrame <- function(img, frame_number){
 
+  # check image file is of suitable type
+  validImage(img)
+
   x = frame_number
 
   # check image dimensions for total number of frames
@@ -44,22 +47,13 @@ selectFrame <- function(img, frame_number){
     total_frame_number = dim(img)[3]
   }
 
-  # check image file is of suitable type
-  validImage(img)
-
-  # check if input is missing
-  if(missing(frame_number)){
-    stop(
-      paste("please specify frame_number.")
-    )
-  }
-
   # check if input is an integer
   if(!is.wholenumber(x)){
     stop(
       paste("frame_number must be an integer.")
     )
   }
+
 
   #check if input is a valid frame number
   if(x<1 || x>total_frame_number){
@@ -184,7 +178,7 @@ blurImage <- function(img, brush_size, brush_shape, sigma = 0.3){
 #'
 #' human_enhanced = intensityCtrl(hNuc, -0.2, 3)
 #' viewImage(human_enhanced)
-#'
+#' @importFrom methods is
 #' @export
 intensityCtrl <- function(img, brightness = 0, contrast = 1){
 

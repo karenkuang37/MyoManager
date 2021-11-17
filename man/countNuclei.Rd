@@ -13,7 +13,7 @@ countNuclei(img)
 Returns a \code{numeric} value of the number of nuclei counted.
 }
 \description{
-The following function uses several functions from \code{\link[EBImage]} to
+The following function uses several functions from \code{EBImage} to
 perform counting of cell nuclei in selected image. *Frame of only nuclei is
 recommended (typically frame #3), counting accuracy decreases if composite
 image is used.
@@ -30,16 +30,16 @@ The key steps are:
 }
 \examples{
 # Example 1
-rabbit = readImage(system.file('extdata/Rabbit_01.tif', package='MyoManager'))
+rabbit = loadImage(system.file('extdata/Rabbit_01.tif', package='MyoManager'))
 rNuc = selectFrame(rabbit, 3)
 countNuclei(rNuc)
 viewImage(rNuc)
 
 # Example 2
-mouse = readImage(system.file('extdata/Mouse_01.tif', package='MyoManager'))
+mouse = loadImage(system.file('extdata/Mouse_01.tiff', package='MyoManager'))
 mNuc = selectFrame(mouse, 3)
 countNuclei(mNuc)
-viewImage(mNuce)
+viewImage(mNuc)
 
 }
 \references{

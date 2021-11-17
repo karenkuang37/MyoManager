@@ -1,6 +1,6 @@
 #' Generate segmented images of cellular structures
 #'
-#' The following function uses several functions from \code{\link[EBImage]} to
+#' The following function uses several functions from \code{EBImage} to
 #' perform image segmentation with the provided frame numbers of cell and nuclei
 #' channels.
 #'

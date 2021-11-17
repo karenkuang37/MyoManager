@@ -2,7 +2,7 @@
 % Please edit documentation in R/nucleiTool.R
 \name{plotFeatureMatrix}
 \alias{plotFeatureMatrix}
-\title{Plot a matrix of pariwise shape/size feature of nuclei objects.}
+\title{Plot a matrix of pairwise shape/size feature of nuclei objects.}
 \usage{
 plotFeatureMatrix(featureDF)
 }
@@ -16,18 +16,19 @@ of the four shape/size features of cell nuclei computed from getFeatureData():
 area, perimeter, radius, and eccentricity.
 }
 \examples{
+\dontrun{
 # Example 1
-rabbit = readImage(system.file('extdata/Rabbit_01.tif', package='MyoManager'))
+rabbit = loadImage(system.file('extdata/Rabbit_01.tif', package='MyoManager'))
 rNuc = selectFrame(rabbit, 3)
 rNuc_df = getFeatureData(rNuc)
 plotFeatureMatrix(rNuc_df)
 
 # Example 2
-mouse = readImage(system.file('extdata/Mouse_01.tif', package='MyoManager'))
+mouse = loadImage(system.file('extdata/Mouse_01.tiff', package='MyoManager'))
 mNuc = selectFrame(mouse, 3)
 mNuc_df = getFeatureData(mNuc)
 plotFeatureMatrix(mNuc_df)
-
+}
 }
 \references{
 Gregoire Pau, Florian Fuchs, Oleg Sklyar, Michael Boutros, and Wolfgang Huber

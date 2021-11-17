@@ -1,3 +1,4 @@
+utils::globalVariables(c("Grayscale", "Color"))
 #' Loading images
 #'
 #' The following function is a wrap around \code{\link[magick]{image_read}} and
@@ -94,6 +95,7 @@ loadImage <- function(image_path) {
 #' @param image_title A \code{character} string specifying the title of the display image.
 #'
 #' @example
+#' \dontrun{
 #' #Example 1
 #' #display a sample tiff distributed with the package
 #' #for tiff images with multiple channels, click to scroll through the frames
@@ -106,7 +108,7 @@ loadImage <- function(image_path) {
 #' library(MyoManager)
 #' image <- loadImage("https://user-images.githubusercontent.com/60583839/141215629-f19d4a77-c5f0-491f-9262-b22cd59739e3.jpg")
 #' viewImage(image, "Greyscale, "rabbit")
-#'
+#'}
 #' @importFrom EBImage Image display
 #' @export
 viewImage <- function(image_obj, color_mode = c(Grayscale, Color), image_title = NULL){
@@ -143,10 +145,20 @@ viewImage <- function(image_obj, color_mode = c(Grayscale, Color), image_title =
 #'
 #' @param image_obj An object of Image class specific to EBImage, stored as multi-
 #' dimensional arrays containing the pixel intensities.
+#'
+#' @importFrom methods is
 validImage <- function(image_obj) {
-  if(is(image_obj, "Image"))
+  test <- try(is(image_obj, "Image"), silent = TRUE)
+  iserror <- inherits(test, "try-error")
+  if(iserror){
+    stop(
+      paste("EBImage object must be an array of pixel values.")
+    )
+  } else if(is(image_obj, "Image")){
     TRUE
-  else
-    stop(paste(image_obj, 'EBI image object must be an array'))
+  }
+  else{
+    stop(paste(image_obj, 'EBImage object must be an array of pixel values.'))
+  }
 }
 # [END]
