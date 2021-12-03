@@ -13,7 +13,7 @@ utils::globalVariables(c("colorMode", "aes", "s.area", "..density..", "margin", 
 #' - apply a threshold to turn Greyscale image binary so every pixel is either 0 or 1
 #' - count objects in the foreground (with pixel value of 1)
 #'
-#' @param img A single-frame Grayscale \code{Image} containing ONLY the nuclei.
+#' @param img A single-frame grayscale \code{Image} containing ONLY nuclei signals.
 #'
 #' @return Returns a \code{numeric} value of the number of nuclei counted.
 #'
@@ -43,7 +43,7 @@ utils::globalVariables(c("colorMode", "aes", "s.area", "..density..", "margin", 
 #'\href{https://doi.org/10.1016/j.aasri.2012.11.074}{link}
 #'\url{https://www.sciencedirect.com/science/article/pii/S2212671612002338}
 #'
-#' @importFrom EBImage colorMode colorMode<- thresh opening fillHull bwlabel
+#' @import EBImage
 #' @export
 countNuclei <- function(img){
 
@@ -51,29 +51,51 @@ countNuclei <- function(img){
   validImage(img)
 
   # ensure nuclei image is in Grayscale
-  if (colorMode(img)!=0){
-    colorMode(img) <- 0
+  if (EBImage::colorMode(img)!=0){
+    EBImage::colorMode(img) <- 0
   }
 
   # use alternative adaptive threshold method if optimal otsu option fails
-  test <- try(otsu(img, range = c(-1, 2)), silent = TRUE)
+  test <- try(EBImage::otsu(img, range = c(-1, 2)), silent = TRUE)
   iserror <- inherits(test, "try-error")
   if(iserror){
     cat(paste("Optimal method cannot support the modified image,",
               "switched to alternative method.",
               "Consider using original greyscale image to improve counting" ,sep="\n"))
 
-    mask = thresh(img, w=10, h=10, offset=0.5)
+    mask = EBImage::thresh(img, w=10, h=10, offset=0.5)
   } else {
     # apply the binary threshold calculated by otsu
-    mask = img > otsu(img, range = c(-1, 2))
+    mask = img > EBImage::otsu(img, range = c(-1, 2))
   }
 
-  # fillHull fills in holes in objects
-  nmask = fillHull(mask)
+  # fillHull() fills in holes in objects
+  nmask = EBImage::fillHull(mask)
+  # bwlabel() converts the image to binary (with 0 or 1 pixel value)
+  nmask = EBImage::bwlabel(nmask)
 
-  # the bwlabel() function labels and 'counts' all connected objects in the foreground
-  nbnuclei <- max(bwlabel(nmask))
+  # extract a list of nuclei object areas
+  size <- EBImage::computeFeatures.shape(nmask)
+  area <- as.list(size[,-2:-6])
+
+  # find indices of background noise disguised as small objects (area < 10 pixels)
+  # note threshold is hard coded, may not be ideal for adaption
+  l <- list()
+  i <- 1
+  for(v in area){
+    if(v <= 10){
+      l <- append(l, i)
+    }
+    i <- i + 1
+  }
+
+  # remove objects by indexing
+  for(i in 1:length(l)){
+    nmask <- EBImage::rmObjects(nmask, l[i], reenumerate = FALSE)
+  }
+
+  # bwlabel() labels and 'counts' all connected objects in the foreground
+  nbnuclei <- max(EBImage::bwlabel(nmask))
 
   # outputs the total count
   cat('\n', 'Number of nuclei in this image =', nbnuclei,'\n')
@@ -91,7 +113,7 @@ countNuclei <- function(img){
 #' feature data extraction can only be performed on single-frame Grayscale images with
 #' defined binary objects.
 #'
-#' @param img A single-frame Grayscale \code{Image} containing ONLY the nuclei.
+#' @param img A single-frame grayscale \code{Image} containing ONLY the nuclei.
 #'
 #' @return Returns a \code{data frame} containing area, perimeter, mean radius, and
 #' eccentricity of each nuclei objects in the \code{Image}.
@@ -117,7 +139,7 @@ countNuclei <- function(img){
 #'\href{https://pubmed.ncbi.nlm.nih.gov/20338898/}{link}
 #'\url{https://bioconductor.org/packages/release/bioc/html/EBImage.html}
 #'
-#' @importFrom EBImage colorMode colorMode<- otsu fillHull bwlabel computeFeatures computeFeatures.shape
+#' @import EBImage
 #' @importFrom dplyr arrange
 #' @export
 getFeatureData <- function(img){
@@ -126,19 +148,19 @@ getFeatureData <- function(img){
   validImage(img)
 
   # ensure nuclei image is in Grayscale
-  if (colorMode(img)!=0){
-    colorMode(img) <- 0
+  if (EBImage::colorMode(img)!=0){
+    EBImage::colorMode(img) <- 0
   }
   # Retrieve feature data from a binary mask of nuclei objects
-  nmask = img > otsu(img, range = c(-1, 2))
-  nmask = fillHull(nmask)
-  nmask = bwlabel(nmask)
+  nmask = img > EBImage::otsu(img, range = c(-1, 2))
+  nmask = EBImage::fillHull(nmask)
+  nmask = EBImage::bwlabel(nmask)
   # get shape feature: eccentricity
-  general <- computeFeatures(nmask, img)
+  general <- EBImage::computeFeatures(nmask, img)
   shape <- as.data.frame(general[,4])
   colnames(shape) <- 's.eccentricity'
   # get size features: area, perimeter, and mean radius
-  size <- computeFeatures.shape(nmask)
+  size <- EBImage::computeFeatures.shape(nmask)
   size <- as.data.frame(size[,-4:-6])
 
   # combine shape and size together
@@ -146,19 +168,22 @@ getFeatureData <- function(img){
   # filter out objects that are too small
   ss_filtered <- subset(ss, ss$s.area>1)
   # re-arrange nuclei data by area (small -> large)
-  ss_filtered <- arrange(ss_filtered, ss_filtered$s.area)
+  ss_filtered <- dplyr::arrange(ss_filtered, ss_filtered$s.area)
 
   return(ss_filtered)
 }
 #' Plot a shape/size feature of nuclei objects.
 #'
 #' The following function plots the density distribution of one of four shape/size features
-#' of cell nuceli computed from getFeatureData(): area, perimeter, radius, or eccentricity.
+#' of cell nuclei computed from getFeatureData(): area, perimeter, radius, or eccentricity.
 #'
 #' @param featureDF A \code{data frame} containing four columns of shape/size features for
 #' each nuclei objects in an \code{Image}.
 #' @param feature A \code{character} vector indicating which feature to plot, can be
 #' area, perimeter, radius, or roundness.
+#'
+#' @return A density plot of indicating the distribution of quantified shape/size feature
+#' of cell nulcei.
 #'
 #' @examples
 #' \dontrun{
@@ -204,52 +229,56 @@ plotFeature <- function(featureDF, feature = c("area", "perimeter", "radius", "r
   # Plotting the selected feature
   if(feature=="area"){
     plot <- featureDF %>%
-      ggplot( aes(x = s.area, y = ..density..)) + labs(x = "object area") +
-      geom_density(fill="#69b3a2", color="#e9ecef", alpha=0.8) +
-      ggtitle("Distribution of nuclei surface area") +
-      theme(plot.margin = margin(0.4, 0.4, 0.4, 0.4, "cm"),
+      ggplot2::ggplot( aes(x = s.area, y = ..density..)) + ggplot2::labs(x = "object area") +
+      ggplot2::geom_density(fill="#69b3a2", color="#e9ecef", alpha=0.8) +
+      ggplot2::ggtitle("Distribution of nuclei surface area") +
+      ggplot2::theme(plot.margin = margin(0.4, 0.4, 0.4, 0.4, "cm"),
             plot.background = element_rect(
               fill = "white",
               size = 1))
   } else if(feature=="perimeter"){
     plot <- featureDF %>%
-      ggplot( aes(x = s.perimeter, y = ..density..)) + labs(x = "object perimeter") +
-      geom_density(fill="#9ecae1", color="#9ecae1", alpha=0.8) +
-      ggtitle("Distribution of nuclei perimeter") +
-      theme(plot.margin = margin(0.4, 0.4, 0.4, 0.4, "cm"),
+      ggplot2::ggplot( aes(x = s.perimeter, y = ..density..)) + ggplot2::labs(x = "object perimeter") +
+      ggplot2::geom_density(fill="#9ecae1", color="#9ecae1", alpha=0.8) +
+      ggplot2::ggtitle("Distribution of nuclei perimeter") +
+      ggplot2::theme(plot.margin = margin(0.4, 0.4, 0.4, 0.4, "cm"),
             plot.background = element_rect(
               fill = "white",
               size = 1))
   } else if(feature=="radius"){
     plot <- featureDF %>%
-      ggplot( aes(x = s.radius.mean, y = ..density..)) + labs(x = "object mean radius") +
-      geom_density(fill="#feb24c", color="#feb24c", alpha=0.8) +
-      ggtitle("Distribution of nuclei mean radius") +
-      theme(plot.margin = margin(0.4, 0.4, 0.4, 0.4, "cm"),
+      ggplot2::ggplot( aes(x = s.radius.mean, y = ..density..)) + ggplot2::labs(x = "object mean radius") +
+      ggplot2::geom_density(fill="#feb24c", color="#feb24c", alpha=0.8) +
+      ggplot2::ggtitle("Distribution of nuclei mean radius") +
+      ggplot2::theme(plot.margin = margin(0.4, 0.4, 0.4, 0.4, "cm"),
             plot.background = element_rect(
               fill = "white",
               size = 1))
   } else if(feature=="roundness"){
     plot <- featureDF %>%
-      ggplot( aes(x = s.eccentricity, y = ..density..)) +
-      labs(x = "object ecc value", subtitle = "(0 = perfect circle)") +
-      geom_density(fill="#fa9fb5", color="#fa9fb5", alpha=0.8) +
-      ggtitle("Distribution of nuclei eccentricity") +
-      theme(plot.margin = margin(0.4, 0.4, 0.4, 0.4, "cm"),
+      ggplot2::ggplot( aes(x = s.eccentricity, y = ..density..)) +
+      ggplot2::labs(x = "object ecc value", subtitle = "(0 = perfect circle)") +
+      ggplot2::geom_density(fill="#fa9fb5", color="#fa9fb5", alpha=0.8) +
+      ggplot2::ggtitle("Distribution of nuclei eccentricity") +
+      ggplot2::theme(plot.margin = margin(0.4, 0.4, 0.4, 0.4, "cm"),
             plot.background = element_rect(
               fill = "white",
               size = 1))
   }
-  plot
+  return(plot)
 }
 #' Plot a matrix of pairwise shape/size feature of nuclei objects.
 #'
 #' The following function plots a matrix of pairwise scatter plots and density distribution
 #' of the four shape/size features of cell nuclei computed from getFeatureData():
-#' area, perimeter, radius, and eccentricity.
+#' area, perimeter, radius, and eccentricity. Correlation value of the four
+#' features is also calculated
 #'
 #' @param featureDF A \code{data frame} containing four columns of shape/size features for
 #' each nuclei objects in an \code{Image}.
+#'
+#' @return A matrix composed of pairwise scatter plots, density distribution, and correlation
+#' values of the four shape/size features of cell nuclei.
 #'
 #' @examples
 #' \dontrun{
@@ -272,8 +301,7 @@ plotFeature <- function(featureDF, feature = c("area", "perimeter", "radius", "r
 #'\href{https://pubmed.ncbi.nlm.nih.gov/20338898/}{link}
 #'\url{https://bioconductor.org/packages/release/bioc/html/EBImage.html}
 #'
-#' @importFrom GGally ggpairs
-#' @importFrom methods is
+#' @importFrom GGally ggpairs wrap
 #' @export
 plotFeatureMatrix <- function(featureDF){
 
@@ -291,10 +319,12 @@ plotFeatureMatrix <- function(featureDF){
   )
 
   # plot pairwise scatter matrix with correlation labels
-  featureDF %>%
-    ggpairs(columns = c("s.area", "s.perimeter", "s.radius.mean", "s.eccentricity"),
+  fMatrix <- featureDF %>%
+    GGally::ggpairs(columns = c("s.area", "s.perimeter", "s.radius.mean", "s.eccentricity"),
             title = "Nuceli Morphology Matrix",
             columnLabels = c("Area","Perimeter","Radius","Eccentricity"),
-            upper = list(continuous = wrap('cor', size=4)))
+            upper = list(continuous = GGally::wrap('cor', size=4)))
+
+  return(fMatrix)
 }
 # [END]
