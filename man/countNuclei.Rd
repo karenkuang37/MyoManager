@@ -7,7 +7,7 @@
 countNuclei(img)
 }
 \arguments{
-\item{img}{A single-frame Grayscale \code{Image} containing ONLY the nuclei.}
+\item{img}{A single-frame grayscale \code{Image} containing ONLY nuclei signals.}
 }
 \value{
 Returns a \code{numeric} value of the number of nuclei counted.

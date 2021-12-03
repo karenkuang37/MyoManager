@@ -4,7 +4,12 @@
 \alias{blurImage}
 \title{Apply a blurring filter}
 \usage{
-blurImage(img, brush_size, brush_shape, sigma = 0.3)
+blurImage(
+  img,
+  brush_size,
+  brush_shape = c("box", "disc", "diamond", "Gaussian", "line"),
+  sigma = 0.3
+)
 }
 \arguments{
 \item{img}{An object of Image class specific to EBImage, stored as multi-
@@ -21,6 +26,9 @@ Can be box, disc, diamond,Gaussian or line. Default is box.}
 Gaussian shape.This argument is relevant only for the
 Gaussian brush shape.Default is 0.3.}
 }
+\value{
+A blurred version of the input image.
+}
 \description{
 The following function uses \code{\link[EBImage]{makeBrush}} to generate
 a filter of choice and applies it to the image. Blurring tends to be
@@ -35,7 +43,7 @@ mNuc = selectFrame(mouse,3)
 viewImage(mNuc)
 
 # apply the blurring brush
-img_blur = blurImage(mNuc, 11, 'gaussian', sigma = 5)
+img_blur <- blurImage(mNuc, 11, 'gaussian', sigma = 5)
 
 # visualize blurred nuclei - brightening is optional (for display purpose)
 viewImage(intensityCtrl(img_blur, 0, 3))

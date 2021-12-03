@@ -16,6 +16,9 @@ applied to the image. Default is 0. (no increased/decreased brightness)}
 \item{contrast}{A \code{numeric} value (>0) containing the degree of contrast to be
 applied to the image. Default is 1.(no increased/decreased contrast)}
 }
+\value{
+A \code{Image} with adjusted brightness and/or contrast.
+}
 \description{
 The following function manipulates the brightness and the degree of contrast
 of an image.

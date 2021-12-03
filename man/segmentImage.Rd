@@ -26,7 +26,7 @@ to show. Can be cell, nuclei, or both (segmented nuclei overlaying segmented cel
 Default is both.}
 }
 \value{
-Returns an \code{Image} containing the segmented structure(s).
+Returns an \code{Image} containing the segmented structure(s) outlined.
 }
 \description{
 The following function uses several functions from \code{EBImage} to

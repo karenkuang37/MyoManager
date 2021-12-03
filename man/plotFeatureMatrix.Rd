@@ -10,10 +10,15 @@ plotFeatureMatrix(featureDF)
 \item{featureDF}{A \code{data frame} containing four columns of shape/size features for
 each nuclei objects in an \code{Image}.}
 }
+\value{
+A matrix composed of pairwise scatter plots, density distribution, and correlation
+values of the four shape/size features of cell nuclei.
+}
 \description{
 The following function plots a matrix of pairwise scatter plots and density distribution
 of the four shape/size features of cell nuclei computed from getFeatureData():
-area, perimeter, radius, and eccentricity.
+area, perimeter, radius, and eccentricity. Correlation value of the four
+features is also calculated
 }
 \examples{
 \dontrun{

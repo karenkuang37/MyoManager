@@ -11,5 +11,5 @@ validImage(image_obj)
 dimensional arrays containing the pixel intensities.}
 }
 \description{
-checks whether 'i' is a suitable image
+checks whether input object is a suitable image
 }

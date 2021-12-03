@@ -11,6 +11,8 @@
 #' dimensional arrays containing the pixel intensities.
 #' @param frame_number A \code{numeric} value specifying a frame in img.
 #'
+#' @return A single-frame grayscale \code{Image} indicated by frame_number.
+#'
 #' @examples
 #' # Example 1
 #' # visualize the nuclei channel in a tiff file
@@ -63,9 +65,9 @@ selectFrame <- function(img, frame_number){
   }
 
   if(total_frame_number > 1){
-    img[,,x]
+    return(img[,,x])
   }else{
-    img
+    return(img)
   }
 }
 #'
@@ -103,6 +105,7 @@ is.wholenumber <- function(x, tol = .Machine$double.eps^0.5) {
 #' Gaussian shape.This argument is relevant only for the
 #' Gaussian brush shape.Default is 0.3.
 #'
+#' @return A blurred version of the input image.
 #'
 #' @examples
 #' # Example 1
@@ -112,7 +115,7 @@ is.wholenumber <- function(x, tol = .Machine$double.eps^0.5) {
 #' viewImage(mNuc)
 #'
 #' # apply the blurring brush
-#' img_blur = blurImage(mNuc, 11, 'gaussian', sigma = 5)
+#' img_blur <- blurImage(mNuc, 11, 'gaussian', sigma = 5)
 #'
 #' # visualize blurred nuclei - brightening is optional (for display purpose)
 #' viewImage(intensityCtrl(img_blur, 0, 3))
@@ -131,18 +134,20 @@ is.wholenumber <- function(x, tol = .Machine$double.eps^0.5) {
 #'\href{https://pubmed.ncbi.nlm.nih.gov/20338898/}{link}
 #'\url{(https://bioconductor.org/packages/release/bioc/html/EBImage.html}
 #'
-#' @importFrom EBImage makeBrush filter2
+#' @import EBImage
 #' @export
-blurImage <- function(img, brush_size, brush_shape, sigma = 0.3){
+blurImage <- function(img, brush_size, brush_shape=c('box', 'disc', 'diamond', 'Gaussian', 'line'), sigma = 0.3){
 
   # check image file is of suitable type
   validImage(img)
 
   # generates a 2D matrix containing the desired brush.
-  w = makeBrush(size = brush_size, shape = brush_shape, sigma = sigma)
+  w = EBImage::makeBrush(size = brush_size, shape = brush_shape, sigma = sigma)
 
   # apply the blurring filter on selected image
-  img = filter2(img, w)
+  img = EBImage::filter2(img, w)
+
+  return(img)
 }
 #'
 #' Simple image manipulations
@@ -160,6 +165,8 @@ blurImage <- function(img, brush_size, brush_shape, sigma = 0.3){
 #' applied to the image. Default is 0. (no increased/decreased brightness)
 #' @param contrast A \code{numeric} value (>0) containing the degree of contrast to be
 #' applied to the image. Default is 1.(no increased/decreased contrast)
+#'
+#' @return A \code{Image} with adjusted brightness and/or contrast.
 #'
 #' @examples
 #' # Example 1: decrease brightness and increase contrast
@@ -201,5 +208,6 @@ intensityCtrl <- function(img, brightness = 0, contrast = 1){
     }
   }
   img = (img + brightness)*contrast
+  return(img)
 }
 # [END]

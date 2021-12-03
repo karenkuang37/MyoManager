@@ -13,9 +13,13 @@ each nuclei objects in an \code{Image}.}
 \item{feature}{A \code{character} vector indicating which feature to plot, can be
 area, perimeter, radius, or roundness.}
 }
+\value{
+A density plot of indicating the distribution of quantified shape/size feature
+of cell nulcei.
+}
 \description{
 The following function plots the density distribution of one of four shape/size features
-of cell nuceli computed from getFeatureData(): area, perimeter, radius, or eccentricity.
+of cell nuclei computed from getFeatureData(): area, perimeter, radius, or eccentricity.
 }
 \examples{
 \dontrun{

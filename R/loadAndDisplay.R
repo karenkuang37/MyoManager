@@ -1,6 +1,3 @@
-# utils::globalVariables(c("Grayscale", "Color"))
-# Grayscale = EBImage::Grayscale
-# Color = EBImage::Color
 #' Loading images
 #'
 #' The following function is a wrap around \code{\link[magick]{image_read}} and
@@ -14,8 +11,8 @@
 #'
 #' @param image_path A \code{character} vector of one or more paths or URLs to image files
 #'
-#' @return LoadImage does not return. ViewImage displays an image object
-#' processed by LoadImage using R graphics.
+#' @return An object of \code{Image} class specific to EBImage, stored as multi-
+#' dimensional arrays containing the pixel intensities.
 #'
 #' @examples
 #' # Example 1
@@ -51,9 +48,9 @@ loadImage <- function(image_path) {
       # stop and return error if file doesn't exist
       img <- if(is.character(x)){
         if(file.exists(x)){
-          img <- image_read(x)
+          img <- magick::image_read(x)
         } else if(grepl("^https?://", x)){
-          img <- image_read(x)
+          img <- magick::image_read(x)
         }else {
         stop(
           paste("input is an invalid file path.")
@@ -61,16 +58,16 @@ loadImage <- function(image_path) {
       }}
 
       # convert image to EBImage object
-      as_EBImage(img)
+      return(magick::as_EBImage(img))
     })
   } else {
 
     # stop and return error if file doesn't exist
     img <- if(is.character(image_path)){
       if(file.exists(image_path)){
-        img <- image_read(image_path)
+        img <- magick::image_read(image_path)
       } else if(grepl("^https?://", image_path)){
-        img <- image_read(image_path)
+        img <- magick::image_read(image_path)
       }else {
         stop(
           paste("input is an invalid file path.")
@@ -78,7 +75,7 @@ loadImage <- function(image_path) {
       }}
 
     # convert image to EBImage object
-    as_EBImage(img)
+    return(magick::as_EBImage(img))
   }
 }
 #'
@@ -97,28 +94,27 @@ loadImage <- function(image_path) {
 #' If missing, default to Grayscale.
 #' @param image_title A \code{character} string specifying the title of the display image.
 #'
-#' @example
-#' \dontrun{
+#' @return ViewImage does not return, it displays an image object
+#' processed by LoadImage using R graphics.
+#'
+#' @examples
 #' #Example 1
 #' #display a sample tiff distributed with the package
 #' #for tiff images with multiple channels, click to scroll through the frames
 #' library(MyoManager)
 #' mouse <- loadImage(system.file('extdata/Mouse_01.tiff', package='MyoManager'))
-#' viewImage(image, 2)
+#' viewImage(mouse, 2)
 #'
 #' #Example 2
 #' #display a sample jpeg from source link
 #' library(MyoManager)
 #' rabbit <- loadImage("https://user-images.githubusercontent.com/60583839/141215629-f19d4a77-c5f0-491f-9262-b22cd59739e3.jpg")
 #' viewImage(image, 0)
-#'}
-#' @importFrom EBImage Image display colorMode colorMode<-
+#'is
+#' @import EBImage
 #' @export
 #'
 viewImage <- function(image_obj, color_mode = c(0, 2), image_title = NULL){
-
-  # Grayscale = 0L
-  # Color = 2L
 
   # check image file is of suitable type
   validImage(image_obj)
@@ -136,7 +132,7 @@ viewImage <- function(image_obj, color_mode = c(0, 2), image_title = NULL){
     }
 
     if(color_mode == 0||color_mode == 2){
-      colorMode(image_obj) <- color_mode
+      EBImage::colorMode(image_obj) <- color_mode
     } else {
       stop(
         paste("color_mode must be either 0 (Grayscale) or 2 (Color).")
@@ -148,20 +144,20 @@ viewImage <- function(image_obj, color_mode = c(0, 2), image_title = NULL){
 #'
 #' Private Helper
 #'
-#' checks whether 'i' is a suitable image
+#' checks whether input object is a suitable image
 #'
 #' @param image_obj An object of Image class specific to EBImage, stored as multi-
 #' dimensional arrays containing the pixel intensities.
 #'
 #' @importFrom methods is
 validImage <- function(image_obj) {
-  test <- try(is(image_obj, "Image"), silent = TRUE)
+  test <- try(methods::is(image_obj, "Image"), silent = TRUE)
   iserror <- inherits(test, "try-error")
   if(iserror){
     stop(
       paste("EBImage object must be an array of pixel values.")
     )
-  } else if(is(image_obj, "Image")){
+  } else if(methods::is(image_obj, "Image")){
     TRUE
   }
   else{

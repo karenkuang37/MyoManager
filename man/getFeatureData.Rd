@@ -7,7 +7,7 @@
 getFeatureData(img)
 }
 \arguments{
-\item{img}{A single-frame Grayscale \code{Image} containing ONLY the nuclei.}
+\item{img}{A single-frame grayscale \code{Image} containing ONLY the nuclei.}
 }
 \value{
 Returns a \code{data frame} containing area, perimeter, mean radius, and

@@ -10,8 +10,8 @@ loadImage(image_path)
 \item{image_path}{A \code{character} vector of one or more paths or URLs to image files}
 }
 \value{
-LoadImage does not return. ViewImage displays an image object
-processed by LoadImage using R graphics.
+An object of \code{Image} class specific to EBImage, stored as multi-
+dimensional arrays containing the pixel intensities.
 }
 \description{
 The following function is a wrap around \code{\link[magick]{image_read}} and

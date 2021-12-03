@@ -18,7 +18,7 @@
 #' to show. Can be cell, nuclei, or both (segmented nuclei overlaying segmented cells).
 #' Default is both.
 #'
-#' @return Returns an \code{Image} containing the segmented structure(s).
+#' @return Returns an \code{Image} containing the segmented structure(s) outlined.
 #'
 #' @examples
 #' # Example 1
@@ -50,7 +50,7 @@
 #'CellProfiler software: \url{http://www.cellprofiler.org}
 #'
 #'
-#' @importFrom EBImage Image otsu fillHull bwlabel opening propagate paintObjects colorMode colorMode
+#' @import EBImage
 #' @export
 segmentImage <- function(img,
                          cell_frame,
@@ -67,42 +67,42 @@ segmentImage <- function(img,
   # first segment nuclei
 
   # ensure nuclei and cell images are in Grayscale
-  if (colorMode(nuc)!=0){
-    colorMode(nuc) <- 0
+  if (EBImage::colorMode(nuc)!=0){
+    EBImage::colorMode(nuc) <- 0
   }
-  if(colorMode(cel)!=0){
-    colorMode(cel) <- 0
+  if(EBImage::colorMode(cel)!=0){
+    EBImage::colorMode(cel) <- 0
   }
 
   # apply the binary threshold calculated by otsu
-  nmask = nuc > otsu(nuc, range = c(-1, 2))
+  nmask = nuc > EBImage::otsu(nuc, range = c(-1, 2))
   # fills in holes in the objects
-  nmask = fillHull(nmask)
+  nmask = EBImage::fillHull(nmask)
   # labels all connected objects in the foreground
-  nmask = bwlabel(nmask)
+  nmask = EBImage::bwlabel(nmask)
 
   # then segment cells
   # opening performs an erosion followed by a dilation
-  ctmask = opening(cel>0.1, makeBrush(5, shape='disc'))
+  ctmask = EBImage::opening(cel>0.1, makeBrush(5, shape='disc'))
   # propagate uses identified nuclei as 'seeds' to find boundaries between adjacent regions in an image
-  cmask = propagate(cel, seeds=nmask, mask=ctmask)
+  cmask = EBImage::propagate(cel, seeds=nmask, mask=ctmask)
 
   # ensure original image is in Color
-  if(colorMode(img)!=2){
-    colorMode(img) <- 2
+  if(EBImage::colorMode(img)!=2){
+    EBImage::colorMode(img) <- 2
   }
 
   # generate segmented image based on user choice
   if(!missing(show_structure)){
     if(show_structure == 'cell'){
-      segmented = paintObjects(ctmask, img, col='#ff00ff', thick = TRUE)
+      segmented = EBImage::paintObjects(ctmask, img, col='#ff00ff', thick = TRUE)
       cat(paste("only cell segmentation is generated"))
     } else if(show_structure == 'nuclei'){
-      segmented = paintObjects(nmask, img, col='#ffff00', thick = TRUE)
+      segmented = EBImage::paintObjects(nmask, img, col='#ffff00', thick = TRUE)
       cat(paste("only nuclei segmentation is generated"))
     } else if(show_structure == 'both'){
-      segmented = paintObjects(cmask, img, col='#ff00ff')
-      segmented = paintObjects(nmask, segmented, col='#ffff00', thick = TRUE)
+      segmented = EBImage::paintObjects(cmask, img, col='#ff00ff')
+      segmented = EBImage::paintObjects(nmask, segmented, col='#ffff00', thick = TRUE)
       cat(paste("cell segmentation with highted nuclei is generated"))
     } else {
       stop(
@@ -111,8 +111,8 @@ segmentImage <- function(img,
     }
   } else {
     # if not specified, both cell and nuclei segmentation will be generated
-    segmented = paintObjects(cmask, img, col='#ff00ff')
-    segmented = paintObjects(nmask, segmented, col='#ffff00', thick = TRUE)
+    segmented = EBImage::paintObjects(cmask, img, col='#ff00ff')
+    segmented = EBImage::paintObjects(nmask, segmented, col='#ffff00', thick = TRUE)
     cat(paste("cell segmentation with highlighted nuclei is generated"))
   }
 

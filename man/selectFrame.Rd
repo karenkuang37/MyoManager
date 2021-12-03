@@ -12,6 +12,9 @@ dimensional arrays containing the pixel intensities.}
 
 \item{frame_number}{A \code{numeric} value specifying a frame in img.}
 }
+\value{
+A single-frame grayscale \code{Image} indicated by frame_number.
+}
 \description{
 The following function selects 1 frame from a composite image to proceed with analysis.
 }

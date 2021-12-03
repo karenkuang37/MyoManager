@@ -17,10 +17,29 @@ If missing, default to Grayscale.}
 
 \item{image_title}{A \code{character} string specifying the title of the display image.}
 }
+\value{
+ViewImage does not return, it displays an image object
+processed by LoadImage using R graphics.
+}
 \description{
 Prompts R's graphic display window to open, this device supports single and multi-frame
 images as well as different degrees of zoom, making it easy to visualize detailed microscopy data.
 }
 \details{
 Alternatively use plot(image) command to make a simple graph of the first frame.
+}
+\examples{
+#Example 1
+#display a sample tiff distributed with the package
+#for tiff images with multiple channels, click to scroll through the frames
+library(MyoManager)
+mouse <- loadImage(system.file('extdata/Mouse_01.tiff', package='MyoManager'))
+viewImage(mouse, 2)
+
+#Example 2
+#display a sample jpeg from source link
+library(MyoManager)
+rabbit <- loadImage("https://user-images.githubusercontent.com/60583839/141215629-f19d4a77-c5f0-491f-9262-b22cd59739e3.jpg")
+viewImage(image, 0)
+is
 }
