@@ -14,7 +14,8 @@ Imports:
     GGally,
     dplyr,
     ggplot2,
-    methods
+    methods,
+    magrittr
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
 Depends: R (>= 3.1.0)

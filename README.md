@@ -90,7 +90,6 @@ For more details about the functions, please take a look at the vignette
 for this package:
 
 ``` r
-# Full version still in progress
 browseVignettes("MyoManager")
 ```
 
