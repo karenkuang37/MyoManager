@@ -18,10 +18,9 @@ values of the four shape/size features of cell nuclei.
 The following function plots a matrix of pairwise scatter plots and density distribution
 of the four shape/size features of cell nuclei computed from getFeatureData():
 area, perimeter, radius, and eccentricity. Correlation value of the four
-features is also calculated
+features is also calculated.
 }
 \examples{
-\dontrun{
 # Example 1
 rabbit = loadImage(system.file('extdata/Rabbit_01.tif', package='MyoManager'))
 rNuc = selectFrame(rabbit, 3)
@@ -33,7 +32,7 @@ mouse = loadImage(system.file('extdata/Mouse_01.tiff', package='MyoManager'))
 mNuc = selectFrame(mouse, 3)
 mNuc_df = getFeatureData(mNuc)
 plotFeatureMatrix(mNuc_df)
-}
+
 }
 \references{
 Gregoire Pau, Florian Fuchs, Oleg Sklyar, Michael Boutros, and Wolfgang Huber

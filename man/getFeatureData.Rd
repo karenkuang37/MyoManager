@@ -26,19 +26,16 @@ feature data extraction can only be performed on single-frame Grayscale images w
 defined binary objects.
 }
 \examples{
-\dontrun{
 # Example 1
 rabbit = loadImage(system.file('extdata/Rabbit_01.tif', package='MyoManager'))
 rNuc = selectFrame(rabbit, 3)
 rNucFeatures_df = getFeatureData(rNuc)
-View(rNucFeatures_df)
 
 # Example 2
 mouse = loadImage(system.file('extdata/Mouse_01.tiff', package='MyoManager'))
 mNuc = selectFrame(mouse, 3)
 mNucFeatures_df = getFeatureData(mNuc)
-View(mNucFeatures_df)
-}
+
 }
 \references{
 Gregoire Pau, Florian Fuchs, Oleg Sklyar, Michael Boutros, and Wolfgang Huber

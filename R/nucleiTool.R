@@ -119,19 +119,16 @@ countNuclei <- function(img){
 #' eccentricity of each nuclei objects in the \code{Image}.
 #'
 #' @examples
-#' \dontrun{
 #' # Example 1
 #' rabbit = loadImage(system.file('extdata/Rabbit_01.tif', package='MyoManager'))
 #' rNuc = selectFrame(rabbit, 3)
 #' rNucFeatures_df = getFeatureData(rNuc)
-#' View(rNucFeatures_df)
 #'
 #' # Example 2
 #' mouse = loadImage(system.file('extdata/Mouse_01.tiff', package='MyoManager'))
 #' mNuc = selectFrame(mouse, 3)
 #' mNucFeatures_df = getFeatureData(mNuc)
-#' View(mNucFeatures_df)
-#'}
+#'
 #' @references
 #'Gregoire Pau, Florian Fuchs, Oleg Sklyar, Michael Boutros, and Wolfgang Huber
 #'(2010): EBImage - an R package for image processing with applications to
@@ -156,7 +153,7 @@ getFeatureData <- function(img){
   nmask = EBImage::fillHull(nmask)
   nmask = EBImage::bwlabel(nmask)
   # get shape feature: eccentricity
-  general <- EBImage::computeFeatures(nmask, img)
+  general <- EBImage::computeFeatures.moment(nmask)
   shape <- as.data.frame(general[,4])
   colnames(shape) <- 's.eccentricity'
   # get size features: area, perimeter, and mean radius
@@ -186,7 +183,6 @@ getFeatureData <- function(img){
 #' of cell nulcei.
 #'
 #' @examples
-#' \dontrun{
 #' # Example 1
 #' rabbit = loadImage(system.file('extdata/Rabbit_01.tif', package='MyoManager'))
 #' rNuc = selectFrame(rabbit, 3)
@@ -195,7 +191,7 @@ getFeatureData <- function(img){
 #'
 #' # Example 2
 #' plotFeature(df, "roundness")
-#'}
+#'
 #' @references
 #'Gregoire Pau, Florian Fuchs, Oleg Sklyar, Michael Boutros, and Wolfgang Huber
 #'(2010): EBImage - an R package for image processing with applications to
@@ -203,8 +199,9 @@ getFeatureData <- function(img){
 #'\href{https://pubmed.ncbi.nlm.nih.gov/20338898/}{link}
 #'\url{https://bioconductor.org/packages/release/bioc/html/EBImage.html}
 #'
-#' @importFrom ggplot2 ggplot geom_density ggtitle theme labs
+#' @import ggplot2
 #' @importFrom methods is
+#' @importFrom magrittr %>%
 #' @export
 plotFeature <- function(featureDF, feature = c("area", "perimeter", "radius", "roundness")){
 
@@ -229,7 +226,9 @@ plotFeature <- function(featureDF, feature = c("area", "perimeter", "radius", "r
   # Plotting the selected feature
   if(feature=="area"){
     plot <- featureDF %>%
-      ggplot2::ggplot( aes(x = s.area, y = ..density..)) + ggplot2::labs(x = "object area") +
+      ggplot2::ggplot( aes(x = s.area, y = (..count..)/sum(..count..))) +
+      ggplot2::labs(x = "object area", y = "Percentage") +
+      ggplot2::scale_y_continuous(labels = scales::percent_format(scale = 10000)) +
       ggplot2::geom_density(fill="#69b3a2", color="#e9ecef", alpha=0.8) +
       ggplot2::ggtitle("Distribution of nuclei surface area") +
       ggplot2::theme(plot.margin = margin(0.4, 0.4, 0.4, 0.4, "cm"),
@@ -238,7 +237,9 @@ plotFeature <- function(featureDF, feature = c("area", "perimeter", "radius", "r
               size = 1))
   } else if(feature=="perimeter"){
     plot <- featureDF %>%
-      ggplot2::ggplot( aes(x = s.perimeter, y = ..density..)) + ggplot2::labs(x = "object perimeter") +
+      ggplot2::ggplot( aes(x = s.perimeter, y = (..count..)/sum(..count..))) +
+      ggplot2::labs(x = "object perimeter", y = "Percentage") +
+      ggplot2::scale_y_continuous(labels = scales::percent_format(scale = 10000)) +
       ggplot2::geom_density(fill="#9ecae1", color="#9ecae1", alpha=0.8) +
       ggplot2::ggtitle("Distribution of nuclei perimeter") +
       ggplot2::theme(plot.margin = margin(0.4, 0.4, 0.4, 0.4, "cm"),
@@ -247,7 +248,9 @@ plotFeature <- function(featureDF, feature = c("area", "perimeter", "radius", "r
               size = 1))
   } else if(feature=="radius"){
     plot <- featureDF %>%
-      ggplot2::ggplot( aes(x = s.radius.mean, y = ..density..)) + ggplot2::labs(x = "object mean radius") +
+      ggplot2::ggplot( aes(x = s.radius.mean, y = (..count..)/sum(..count..))) +
+      ggplot2::labs(x = "object mean radius", y = "Percentage") +
+      ggplot2::scale_y_continuous(labels = scales::percent_format(scale = 10000)) +
       ggplot2::geom_density(fill="#feb24c", color="#feb24c", alpha=0.8) +
       ggplot2::ggtitle("Distribution of nuclei mean radius") +
       ggplot2::theme(plot.margin = margin(0.4, 0.4, 0.4, 0.4, "cm"),
@@ -256,8 +259,9 @@ plotFeature <- function(featureDF, feature = c("area", "perimeter", "radius", "r
               size = 1))
   } else if(feature=="roundness"){
     plot <- featureDF %>%
-      ggplot2::ggplot( aes(x = s.eccentricity, y = ..density..)) +
-      ggplot2::labs(x = "object ecc value", subtitle = "(0 = perfect circle)") +
+      ggplot2::ggplot( aes(x = s.eccentricity, y = (..count..)/sum(..count..))) +
+      ggplot2::labs(x = "object ecc value", y = "Percentage", subtitle = "(0 = perfect circle)") +
+      ggplot2::scale_y_continuous(labels = scales::percent_format(scale = 10000)) +
       ggplot2::geom_density(fill="#fa9fb5", color="#fa9fb5", alpha=0.8) +
       ggplot2::ggtitle("Distribution of nuclei eccentricity") +
       ggplot2::theme(plot.margin = margin(0.4, 0.4, 0.4, 0.4, "cm"),
@@ -272,7 +276,7 @@ plotFeature <- function(featureDF, feature = c("area", "perimeter", "radius", "r
 #' The following function plots a matrix of pairwise scatter plots and density distribution
 #' of the four shape/size features of cell nuclei computed from getFeatureData():
 #' area, perimeter, radius, and eccentricity. Correlation value of the four
-#' features is also calculated
+#' features is also calculated.
 #'
 #' @param featureDF A \code{data frame} containing four columns of shape/size features for
 #' each nuclei objects in an \code{Image}.
@@ -281,7 +285,6 @@ plotFeature <- function(featureDF, feature = c("area", "perimeter", "radius", "r
 #' values of the four shape/size features of cell nuclei.
 #'
 #' @examples
-#' \dontrun{
 #' # Example 1
 #' rabbit = loadImage(system.file('extdata/Rabbit_01.tif', package='MyoManager'))
 #' rNuc = selectFrame(rabbit, 3)
@@ -293,7 +296,7 @@ plotFeature <- function(featureDF, feature = c("area", "perimeter", "radius", "r
 #' mNuc = selectFrame(mouse, 3)
 #' mNuc_df = getFeatureData(mNuc)
 #' plotFeatureMatrix(mNuc_df)
-#'}
+#'
 #' @references
 #'Gregoire Pau, Florian Fuchs, Oleg Sklyar, Michael Boutros, and Wolfgang Huber
 #'(2010): EBImage - an R package for image processing with applications to
@@ -302,6 +305,7 @@ plotFeature <- function(featureDF, feature = c("area", "perimeter", "radius", "r
 #'\url{https://bioconductor.org/packages/release/bioc/html/EBImage.html}
 #'
 #' @importFrom GGally ggpairs wrap
+#' @importFrom magrittr %>%
 #' @export
 plotFeatureMatrix <- function(featureDF){
 

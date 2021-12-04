@@ -109,8 +109,8 @@ loadImage <- function(image_path) {
 #' #display a sample jpeg from source link
 #' library(MyoManager)
 #' rabbit <- loadImage("https://user-images.githubusercontent.com/60583839/141215629-f19d4a77-c5f0-491f-9262-b22cd59739e3.jpg")
-#' viewImage(image, 0)
-#'is
+#' viewImage(rabbit, 0)
+#'
 #' @import EBImage
 #' @export
 #'

@@ -22,7 +22,6 @@ The following function plots the density distribution of one of four shape/size 
 of cell nuclei computed from getFeatureData(): area, perimeter, radius, or eccentricity.
 }
 \examples{
-\dontrun{
 # Example 1
 rabbit = loadImage(system.file('extdata/Rabbit_01.tif', package='MyoManager'))
 rNuc = selectFrame(rabbit, 3)
@@ -31,7 +30,7 @@ plotFeature(df, "area")
 
 # Example 2
 plotFeature(df, "roundness")
-}
+
 }
 \references{
 Gregoire Pau, Florian Fuchs, Oleg Sklyar, Michael Boutros, and Wolfgang Huber
