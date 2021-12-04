@@ -29,8 +29,14 @@ knit_hooks$set(par = function(before, options, envir)
 set.seed(1) # for exact reproducibility
 ```
 
-```{r setup, results='hide'}
+```{r setup, echo=FALSE, message=FALSE}
 library(MyoManager)
+library(EBImage)
+library(magrittr)
+library(ggplot2)
+library(dplyr)
+library(methods)
+library(GGally)
 ```
 
 ## Introduction
@@ -54,7 +60,7 @@ Functions for image processing permits users to perform simple manipulations inc
 
 Function __*segmentImage*__ is available to produce segmented visuals of cell and nuclei shapes. Segmentation of individual image channels is often useful when it is difficult to distinguish cell shape and structures by eye. (e.g. Visualizing segmentation helps users locate nuclei within a mesh of muscle fibers)
 
-Function __*countNuclei*__ is in charge of counting the number of nuclei objects in an input image. It implements the [Otsu](https://www.sciencedirect.com/science/article/pii/S2212671612002338) method, which is a global adaptive binarization threshold image segmentation algorithm, put forward by Japanese scholars Otsu in 1979. Function __*getFeatureData*__ retrieves the <span style="color:green">area</span>, <span style="color:blue">perimeter</span>, <span style="color:orange">mean radius</span>, and <span style="color:purple">eccentricity</span> of each nuclei object in the input image, allowing function __*plotFeature*__ to plot the density distribution of selected feature and function __*plotFeatureMatrix*__ to showcase the distribution and correlation of all four shape/size features of the nuclei. 
+Function __*countNuclei*__ is in charge of counting the number of nuclei objects in an input image. It implements the [Otsu](https://ieeexplore.ieee.org/document/4310076) method, which is a global adaptive binarization threshold image segmentation algorithm, put forward by Japanese scholars Otsu in 1979. Function __*getFeatureData*__ retrieves the <span style="color:green">area</span>, <span style="color:blue">perimeter</span>, <span style="color:orange">mean radius</span>, and <span style="color:purple">eccentricity</span> of each nuclei object in the input image, allowing function __*plotFeature*__ to plot the density distribution of selected feature and function __*plotFeatureMatrix*__ to showcase the distribution and correlation of all four shape/size features of the nuclei. 
 
 The shiny implementation of *MyoManager* is available as __*runMyoManager*__. For more information, see details below. **This document gives a tour of MyoManager (version 0.1.0) functionalities**. It was written in R Markdown, using the [knitr](https://cran.r-project.org/package=knitr) package for production. 
 
@@ -73,7 +79,7 @@ lsf.str("package:MyoManager")
 
 ## Image Analysis Workflow
 
-### Step 1. Load and view image data from source link/image file(s)
+### Step 1. Load and view images from path/url
 
 As a starter, microscopy image can be loaded into the R environment using: 
 ```{r load_image}
@@ -81,76 +87,91 @@ rabbit <- loadImage(system.file('extdata/Rabbit_01.tif', package = 'MyoManager')
 ```
 single and multiple images are equally supported provided one or more paths or URLs to image files is given. Images are stored as objects of \code{Image} class, as defined by R package *EBImage*, they are multi-dimensional arrays containing the pixel intensities. This form makes images easier to manipulate.
 
-To view uploaded image(s), the generic plot(rabbit) function is applicable. But for a more interactive visualization:
-```{r view_image}
+To view uploaded image(s), the generic plot(rabbit) function is applicable to display one the first frame of a composite image. For a more interactive visualization:
+```{r view_image, eval=FALSE}
 # 0 for Grayscale or 2 for Color
 viewImage(rabbit, color_mode = 2)
 ```
-prompts R's graphic display window to open, which supports multi-frame viewing as well as different degrees of zoom, making it easy to closely examine the microscopy image.
-```{r echo=FALSE, out.width='100%'}
+this function prompts R's graphic display window to open, which supports multi-frame viewing as well as different degrees of zoom, making it easy to closely examine the microscopy image.
+```{r echo=FALSE, out.width='80%'}
 knitr::include_graphics('./viewImage.png')
 ```
-```{r view_image}
-# Additionally, base R happens to support simple histogram of image pixel intensity (by color), if user is interested
-hist(rabbit)
-```
+
 
 ### Step 2. Image processing 
 
 Microscopy images are usually composed of multiple channels of fluorescence. To focus on one channel (e.g. nuclei), we can select its frame number based our  initial view of the image:
-```{r frame_select}
-# After viewing Rabbit_01.tif in Grayscale, we see that cell bodies (muscle fibers) are in frame #1 of the composite image
+```{r frame_select,figures-side, fig.show="hold", fig.height=2}
+# After viewing Rabbit_01.tif in Grayscale, we see that 
+# cell bodies (muscle fibers) are in frame #1 of the composite image
 rFib = selectFrame(rabbit,1)
 # While nuclei are in frame #3
 rNuc = selectFrame(rabbit,3)
+
+par( mfrow = c(1,2))
 viewImage(rFib)
 viewImage(rNuc)
 ```
 
-
 Options for simple manipulations of the image include adjusting its brightness and/or contrast:
-```{r intesity_control}
+```{r intesity_control, out.width='60%', out.height='50%'}
 # Decrease brightness and increase contrast (good for object identification)
 rabbit_enhanced = intensityCtrl(rNuc, -0.2, 3)
 viewImage(rabbit_enhanced)
 ```
 Another option in image processing is blurring. It may sound counter intuitive, but blurring is useful prior to analyzing individual objects in an image with ill-defined edges and/or uneven intensities. It applies a filter of choice to the image, some are for performing low-pass filtering (to blur images, remove noise...), others perform high-pass filtering (detect edges, sharpen images...). Here is an example:
-```{r blurring}
+```{r blurring, out.width='60%', out.height='50%'}
 rNuc_blur = blurImage(rNuc, 11, 'line')
 viewImage(rNuc_blur)
 ```
 
 The last processing option MyoManager presents is segmentation —— unique for pronounced cellular structures like the muscle stem cell. Segmentation of individual image channels is often useful when it is difficult to distinguish structures by eye. (e.g. locating nuclei within a mesh of muscle fibers). Here is an example:
-```{r segment_image}
+```{r segment_image, out.width='60%', out.height='50%'}
 # cell segmentation with highlighted nuclei is generated
 segmented_rabbit <- segmentImage(rabbit, 1, 3)
 viewImage(segmented_rabbit)
 ```
 
 
-### Step 3. Image analysis 
+### Step 3. Image analysis and data extraction
 
-Counting the number of nuclei seems to be an easy task. But researchers often produce data in bulk, no one enjoys the task of manually tallying nuclei counts in tens of hundreds of images. Here MyoManager provides an automated alternative to manual counting with:
+[3.1] The distribution of pixel intensities (univariate if in Grayscale; by color channel if in Color) can be plotted in a histogram using base R function hist(), and their range can be inspected using range().
+```{r, eval=FALSE}
+hist(rabbit)
+range(rabbit)
+## [1] 0 1
+```
+```{r echo=FALSE, out.width='100%'}
+knitr::include_graphics('./pixel_intensity_hist.png')
+```
+[3.2] Counting the number of nuclei seems to be an easy task. But researchers often produce data in bulk, no one enjoys the task of manually tallying nuclei counts in tens of hundreds of images. Here MyoManager provides an automated alternative to manual counting with:
 ```{r nuclei_count}
 # note the input image has to be the frame with only nuclei signals
 countNuclei(rNuc)
 ```
-The counting algorithm (Otsu) implemented here is reasonably accurate with an error margin of 5~10% when compared with manual counting. 
+The [Otsu](https://ieeexplore.ieee.org/document/4310076) counting algorithm employed here is reasonably accurate with an error margin of 5~10% when compared with manual counting. 
 
-In addition to nulcei counting, MyoManager offers a selection of shape/size features to be extracted from the target images: <span style="color:blue">perimeter</span>, <span style="color:orange">mean radius</span>, and <span style="color:purple">eccentricity</span> ( elliptical eccentricity is a measurement of circularity defined by sqrt(1-minoraxis^2/majoraxis^2). This value approaches 0 for rounder objects and 1 for elongated ones. The user can obtain a data frame of features using:
+[3.3] In addition to nuclei counting, MyoManager offers a selection of shape/size features to be extracted from the target images: <span style="color:blue">perimeter</span>, <span style="color:orange">mean radius</span>, and <span style="color:purple">eccentricity</span> ( elliptical eccentricity is a measurement of circularity defined by sqrt(1-minoraxis^2/majoraxis^2). This value approaches 0 for rounder objects and 1 for elongated ones. The user can obtain a data frame of features using:
 ```{r feature_data}
 rNucFeatures_df = getFeatureData(rNuc)
 tail(rNucFeatures_df)
 ```
 Subsequently, each feature can be visualized in density distributions using:
-```{r plot_feature}
+```{r plot_feature, eval=FALSE}
 plotFeature(rNucFeatures_df, "area")
 plotFeature(rNucFeatures_df, "perimeter")
 plotFeature(rNucFeatures_df, "radius")
 plotFeature(rNucFeatures_df, "roundness")
 ```
-Lastly, 
-```{}
+```{r echo=FALSE,figures-side,out.width='115%'}
+knitr::include_graphics('./feature_dens.png')
+```
+
+[3.4]Aside from interest in individual morphological features of the cell nuclei, it is often useful for researchers to visualize the correlation between these features to fully understand nuclei structures at a specific cellular state. For example, recent research in muscle stem cells points to strong correlation between nuclear size and circularity as an indicator that the stem cells are transcriptionally active.
+
+The following function plots a matrix of pairwise scatter plots and density distribution of the four shape/size features of cell nuclei computed from getFeatureData(): area, perimeter, radius, and eccentricity. Correlation value of the four features is also calculated.
+```{r features_matrix}
+plotFeatureMatrix(rNucFeatures_df)
 ```
 <br>
 
@@ -169,9 +190,7 @@ Jeroen Ooms (2021). magick: Advanced Graphics and Image-Processing in R. R packa
 
 Gregoire Pau, Florian Fuchs, Oleg Sklyar, Michael Boutros, and Wolfgang Huber (2010): EBImage - an R package for image processing with applications to cellular phenotypes. *Bioinformatics*, 26(7), pp. 979-981, Ref link: https://pubmed.ncbi.nlm.nih.gov/20338898/ URL: https://bioconductor.org/packages/release/bioc/html/EBImage.html
 
-Xiaolu Yang, Xuanjing Shen, Jianwu Long, Haipeng Chen, (2012): An Improved Median-based Otsu Image Thresholding Algorithm. *AASRI Procedia*,Volume 3, pp. 468-473, Ref link: https://doi.org/10.1016/j.aasri.2012.11.074} URL: https://www.sciencedirect.com/science/article/pii/S2212671612002338
-
-Dunn KW, Kamocka MM, McDonald JH, (2011): A practical guide to evaluating colocalization in biological microscopy. *Am J Physiol Cell Physiol*. 300(4):C723-C742. doi:10.1152/ajpcell.00462.2010 URL: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3074624/
+N. Otsu, "A Threshold Selection Method from Gray-Level Histograms, (1979)" in *IEEE Transactions on Systems, Man, and Cybernetics*, vol. 9, no. 1, pp. 62-66, doi: 10.1109/TSMC.1979.4310076. Ref link: https://ieeexplore.ieee.org/document/4310076.
 
 Yin H, Price F, Rudnicki MA. (2013) Satellite cells and the muscle stem cell niche. *Physiol Rev*. ;93(1):23-67. doi:10.1152/physrev.00043.2011. URL: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4073943/
 
