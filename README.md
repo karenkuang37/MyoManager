@@ -145,7 +145,7 @@ The package tree structure is provided below:
 ```
 
 An overview of the package is illustrated below.
-![](./inst/extdata/Overview.png)
+![](./inst/extdata/overview_pic/Overview.png)
 
 ## Contributions
 
