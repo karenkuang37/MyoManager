@@ -14,10 +14,10 @@ ui <- navbarPage(title = "MyoManager",
                               # fileInput(inputId = "local",
                               #           label = "Choose an image or image folder from local directory"),
                               textInput(inputId = "html",
-                                        label = "Alternatively, enter a valid file path or url"),
+                                        label = "Please enter a valid image file path or url:"),
                               helpText("(Try a sample link: https://user-images.githubusercontent.com/60583839/141215629-f19d4a77-c5f0-491f-9262-b22cd59739e3.jpg)"),
-                              selectInput("sample", "Sample image:", list.files(system.file('extdata', package = 'MyoManager'))),
-                              tags$strong("Please select a display option"),
+                              selectInput("sample", "Sample images:", list.files(system.file('extdata', package = 'MyoManager'))),
+                              tags$strong("Please select display option:"),
                               actionButton(inputId = "color",
                                            label = "Color"),
                               actionButton(inputId = "grayscale",
@@ -162,13 +162,10 @@ server <- function(input, output) {
 
       # if(!is.null(isolate(inFile_html()))){
       #   plot(EBImage::`colorMode<-`(inFile_html(), rv$colorMode), all=TRUE)
+      # } else {
+      # plot(EBImage::`colorMode<-`(inFile_sample(), rv$colorMode), all=TRUE)
       # }
-      # } else if(!is.null(isolate(inFile_local())) && is.null(isolate(inFile_html()))){
-      #   plot(EBImage::`colorMode<-`(inFile_local(), rv$colorMode), all=TRUE)
-      # }
-      # else {
-        # plot(EBImage::`colorMode<-`(inFile_sample(), rv$colorMode), all=TRUE)
-      # }
+
     }
   })
 
@@ -177,17 +174,18 @@ server <- function(input, output) {
       return()
     }else{
       MyoManager::viewImage(inFile_sample(), rv$colorMode)
-      # if(is.null(isolate(inFile_local())) && is.null(isolate(inFile_html()))){
-      # MyoManager::viewImage(inFile_sample(), rv$colorMode)
-      # } else if(!is.null(isolate(inFile_local())) && is.null(isolate(inFile_html()))){
-      #   MyoManager::viewImage(inFile_local(), rv$colorMode)
-      # } else if(!is.null(isolate(inFile_html())) && is.null(isolate(inFile_local()))){
+
+      # if(!is.null(isolate(inFile_html()))){
       #   MyoManager::viewImage(inFile_html(), rv$colorMode)
+      # } else {
+      #   MyoManager::viewImage(inFile_sample(), rv$colorMode)
       # }
+
     }
   })
 
 
+ ######################################## Temporary filler plots below
   observeEvent(input$reunif, { rv$unif <- runif(500) })
   observeEvent(input$rechisq, { rv$chisq <- rchisq(500, 2) })
 
