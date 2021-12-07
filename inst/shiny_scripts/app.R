@@ -14,7 +14,8 @@ ui <- navbarPage(title = "MyoManager",
                               # fileInput(inputId = "local",
                               #           label = "Choose an image or image folder from local directory"),
                               textInput(inputId = "html",
-                                        label = "Provide a valid image file path or url:"),
+                                        label = "Provide a valid image file path or url:",
+                                        value = "null"),
                               helpText("(Try a sample link:
                                        https://user-images.githubusercontent.com/60583839/141215629-f19d4a77-c5f0-491f-9262-b22cd59739e3.jpg)"),
                               checkboxInput("checker", "User Input Entered", FALSE),
@@ -124,7 +125,7 @@ ui <- navbarPage(title = "MyoManager",
 server <- function(input, output) {
   # Set up reactive image file
   inFile <- reactive({
-    if(is.null(input$html)){
+    if(input$html == "null"){
       out <- MyoManager::loadImage(system.file("extdata", input$sample, package="MyoManager"))
     } else {
       out <- MyoManager::loadImage(input$html)
