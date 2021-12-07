@@ -14,8 +14,10 @@ ui <- navbarPage(title = "MyoManager",
                               # fileInput(inputId = "local",
                               #           label = "Choose an image or image folder from local directory"),
                               textInput(inputId = "html",
-                                        label = "Please enter a valid image file path or url:"),
-                              helpText("(Try a sample link: https://user-images.githubusercontent.com/60583839/141215629-f19d4a77-c5f0-491f-9262-b22cd59739e3.jpg)"),
+                                        label = "Provide a valid image file path or url:"),
+                              helpText("(Try a sample link:
+                                       https://user-images.githubusercontent.com/60583839/141215629-f19d4a77-c5f0-491f-9262-b22cd59739e3.jpg)"),
+                              checkboxInput("checker", "User Input Entered", FALSE),
                               selectInput("sample", "Sample images:", list.files(system.file('extdata', package = 'MyoManager'))),
                               tags$strong("Please select display option:"),
                               actionButton(inputId = "color",
@@ -43,11 +45,13 @@ ui <- navbarPage(title = "MyoManager",
                                      helpText("(Hint: decreased brightness + increased contrast
                                               is good for object identification)"),
                             sidebarLayout(sidebarPanel(
+                                helpText("Note that this function only shows image in grayscale."),
                                 # for picking a frame
                                 numericInput(inputId = "fNum",
                                              label = "Please specify a frame",
                                              helpText("(see Home tab for the frame number of nuclei/cell body)"),
-                                             value = 3),
+                                             value = 3,
+                                             min = 1, max = 5),
                                  # for picking brightness
                                  numericInput(inputId = "brightness",
                                              label = "Please specify the brightness",
@@ -118,28 +122,28 @@ ui <- navbarPage(title = "MyoManager",
 )
 
 server <- function(input, output) {
-  # Tab 1: Load & Display
   # Set up reactive image file
-  # inFile_local <- reactive({
-  #   if(!is.null(input$local)){
-  #     MyoManager::readImage(input$local)
+  inFile <- reactive({
+    if(is.null(input$html)){
+      out <- MyoManager::loadImage(system.file("extdata", input$sample, package="MyoManager"))
+    } else {
+      out <- MyoManager::loadImage(input$html)
+    }
+    return(out)
+  })
+
+  # inFile_sample <- reactive({
+  #   f = system.file("extdata", input$sample, package="MyoManager")
+  #   MyoManager::loadImage(f)
+  # })
+  # inFile_html <- reactive({
+  #   if(!is.null(input$html)){
+  #     MyoManager::loadImage(input$html)
   #   }else{
   #     NULL
   #   }
   # })
-  inFile_sample <- reactive({
-    f = system.file("extdata", input$sample, package="MyoManager")
-    MyoManager::loadImage(f)
-  })
-  inFile_html <- reactive({
-    if(!is.null(input$html)){
-      MyoManager::loadImage(input$html)
-    }else{
-      NULL
-    }
-  })
-
-
+  ######################################## Tab 1: Load & Display
   rv <- reactiveValues(
     # display options for Tab 1
     colorMode = NULL,
@@ -155,17 +159,10 @@ server <- function(input, output) {
 
   # render display output
   output$raster_1 <- renderPlot({
-    if(is.null(rv$colorMode)){
+    if (!is.null(rv$colorMode)){
+      plot(EBImage::`colorMode<-`(inFile(), rv$colorMode), all=TRUE)
+    } else {
       return()
-    }else{
-      plot(EBImage::`colorMode<-`(inFile_sample(), rv$colorMode), all=TRUE)
-
-      # if(!is.null(isolate(inFile_html()))){
-      #   plot(EBImage::`colorMode<-`(inFile_html(), rv$colorMode), all=TRUE)
-      # } else {
-      # plot(EBImage::`colorMode<-`(inFile_sample(), rv$colorMode), all=TRUE)
-      # }
-
     }
   })
 
@@ -183,6 +180,14 @@ server <- function(input, output) {
 
     }
   })
+ ######################################## Tab 2: Image Processor
+  output$widget_2.1 <- renderDisplay({
+    MyoManager::viewImage(MyoManager::intensityCtrl(MyoManager::selectFrame(inFile_sample(), input$fNum),
+                                                    input$brightness,
+                                                    input$contrast),
+                          color_mode = 0)
+  })
+
 
 
  ######################################## Temporary filler plots below
