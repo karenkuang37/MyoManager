@@ -146,16 +146,6 @@ server <- function(input, output) {
   observeEvent(input$grayscale, {
     rv$colorMode <- 0})
 
-  # Set up reactive image file
-  inFile <- reactive({
-    if(input$html == "null"){
-      out <- MyoManager::loadImage(system.file("extdata", input$sample, package="MyoManager"))
-    } else {
-      out <- MyoManager::loadImage(input$html)
-    }
-    return(out)
-  })
-
   # render display output
   output$raster_1 <- renderPlot({
     if (!is.null(rv$colorMode)){
