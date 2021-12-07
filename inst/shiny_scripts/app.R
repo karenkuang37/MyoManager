@@ -18,7 +18,6 @@ ui <- navbarPage(title = "MyoManager",
                                         value = "null"),
                               helpText("(Try a sample link:
                                        https://user-images.githubusercontent.com/60583839/141215629-f19d4a77-c5f0-491f-9262-b22cd59739e3.jpg)"),
-                              checkboxInput("checker", "User Input Entered", FALSE),
                               selectInput("sample", "Sample images:", list.files(system.file('extdata', package = 'MyoManager'))),
                               tags$strong("Please select display option:"),
                               actionButton(inputId = "color",
@@ -133,17 +132,6 @@ server <- function(input, output) {
     return(out)
   })
 
-  # inFile_sample <- reactive({
-  #   f = system.file("extdata", input$sample, package="MyoManager")
-  #   MyoManager::loadImage(f)
-  # })
-  # inFile_html <- reactive({
-  #   if(!is.null(input$html)){
-  #     MyoManager::loadImage(input$html)
-  #   }else{
-  #     NULL
-  #   }
-  # })
   ######################################## Tab 1: Load & Display
   rv <- reactiveValues(
     # display options for Tab 1
@@ -157,6 +145,16 @@ server <- function(input, output) {
     rv$colorMode <- 2})
   observeEvent(input$grayscale, {
     rv$colorMode <- 0})
+
+  # Set up reactive image file
+  inFile <- reactive({
+    if(input$html == "null"){
+      out <- MyoManager::loadImage(system.file("extdata", input$sample, package="MyoManager"))
+    } else {
+      out <- MyoManager::loadImage(input$html)
+    }
+    return(out)
+  })
 
   # render display output
   output$raster_1 <- renderPlot({
