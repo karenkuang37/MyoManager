@@ -215,7 +215,7 @@ plotFeature <- function(featureDF, feature = c("area", "perimeter", "radius", "r
   # check feature input is of correct string
   if(missing(feature)){
     stop(
-      paste("please specify a feature, can be 'area', 'perimeter', 'radius', or 'roundness'.")
+      paste("please specify a morphological feature.")
     )
   } else if (!feature %in% list("area", "perimeter", "radius", "roundness")){
     stop(

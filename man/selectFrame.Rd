@@ -33,7 +33,7 @@ viewImage(nuc)
 
 
 # Example 2
-# visualize the fiber(cell body) channel in a jpg image
+# visualize the fiber(cell body) channel in a tif image
 mouse = loadImage(system.file('extdata/Mouse_02.tif', package='MyoManager'))
 fib = selectFrame(mouse,2)
 viewImage(nuc)

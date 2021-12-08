@@ -22,7 +22,7 @@
 #'
 #'
 #' # Example 2
-#' # visualize the fiber(cell body) channel in a jpg image
+#' # visualize the fiber(cell body) channel in a tif image
 #' mouse = loadImage(system.file('extdata/Mouse_02.tif', package='MyoManager'))
 #' fib = selectFrame(mouse,2)
 #' viewImage(nuc)
@@ -84,6 +84,9 @@ selectFrame <- function(img, frame_number){
 #' @param x A numeric value to be tested upon.
 #' @param tol A default tolerance level.
 is.wholenumber <- function(x, tol = .Machine$double.eps^0.5) {
+  if(!is.numeric(x)){
+     return(FALSE)
+  }
   abs(x - round(x)) < tol
 }
 #'
@@ -136,12 +139,17 @@ is.wholenumber <- function(x, tol = .Machine$double.eps^0.5) {
 #'
 #' @import EBImage
 #' @export
-blurImage <- function(img, brush_size, brush_shape=c('box', 'disc', 'diamond', 'Gaussian', 'line'), sigma = 0.3){
+blurImage <- function(img, brush_size = 5, brush_shape=c('box', 'disc', 'diamond', 'Gaussian', 'line'), sigma = 0.3){
 
   # check image file is of suitable type
   validImage(img)
 
   # generates a 2D matrix containing the desired brush.
+  if(!is.numeric(brush_size)){
+    stop(
+      paste("Please enter a valid numeric brush_size")
+    )
+  }
   w = EBImage::makeBrush(size = brush_size, shape = brush_shape, sigma = sigma)
 
   # apply the blurring filter on selected image

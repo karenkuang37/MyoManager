@@ -6,7 +6,7 @@
 \usage{
 blurImage(
   img,
-  brush_size,
+  brush_size = 5,
   brush_shape = c("box", "disc", "diamond", "Gaussian", "line"),
   sigma = 0.3
 )

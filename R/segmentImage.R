@@ -61,6 +61,10 @@ segmentImage <- function(img,
   validImage(img)
 
   # select frames
+  if(missing(cell_frame)||missing(nuc_frame)){
+    stop(
+      paste("Please indicate frame numbers of cell AND nuclei")
+    )}
   cel = selectFrame(img, cell_frame)
   nuc = selectFrame(img, nuc_frame)
 
