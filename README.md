@@ -8,15 +8,15 @@
 
 **MyoManager** is a R toolbox for reading, visualizing, and analyzing
 microscopy images focused on muscle stem cells in their native
-microenvironment — the muscle tissue niche. Specifically, three areas of
-analysis will be implemented: cell counting (by counting \#nuclei),
-nuclei morphology (by extracting quantitative shape/size features of
-segmented objects from image data), and signal co-localization (under
-construction). While muscle stem cells are well characterized in
-literature, imaging these characteristics is a laborious task for
-researchers, the goal of this tool is to automate image analysis of
-hard-to-distinguish structures in muscle stem cells and provided better
-insight into their biology and behaviors.
+microenvironment — the muscle tissue niche. Specifically, these analysis
+tools will be implemented: cell counting (by counting #nuclei), nuclei
+morphology (by extracting quantitative shape/size features of segmented
+objects from image data), and signal co-localization (work in progress).
+While muscle stem cells are well characterized in literature, imaging
+these characteristics is a laborious task for researchers, the goal of
+this tool is to automate image analysis of hard-to-distinguish
+structures in muscle stem cells and provided better insight into their
+biology and behaviors.
 
 Bio-image analysis is not novel to the R environment. Packages like
 **EBImage** contain a wide assortment of processing functions. However
@@ -44,7 +44,11 @@ install_github("karenkuang37/MyoManager", build_vignettes = TRUE)
 library("MyoManager")
 ```
 
-To run the shinyApp: \# Under construction
+Try out the shinyApp implementation of MyoManager:
+
+``` r
+MyoManager::runMyoManager()
+```
 
 ## Overview
 
@@ -79,12 +83,13 @@ features included area, perimeter, mean radius, and eccentricity (
 density plots, and correlation values of these shape/size features (
 ***plotFeatureMatrix*** ).
 
-**5.** Other functionalities more specific to muscle stem cells will be
-implemented, including calculation of fusion index (ratio of \[\#stem
-cells fused with muscle fiber\]:\[\#stem cells outside muscle fiber\]),
-signal co-localization (how the distribution of signals in fluorescence
+**5.Future progress: ** MyoManager will be continually developed to
+support more analysis functions specific to muscle stem cells, such as
+calculation of *fusion index* (ratio of \[#stem cells fused with muscle
+fiber\]:\[#stem cells outside muscle fiber\]), and *signal
+co-localization* (how the distribution of signals in fluorescence
 microscopy images can be used to determine whether two probes
-codistribute with one another.), and others.
+codistribute with one another.).
 
 For more details about the functions, please take a look at the vignette
 for this package:
@@ -102,17 +107,18 @@ The package tree structure is provided below:
   |- NAMESPACE
   |- LICENSE
   |- README
-  |- data
-    |- GeneCounts.rda
   |- inst
     CITATION
     |- extdata
       |- Human_01.tiff
+      |- Human_02.tiff
       |- Mouse_01.tiff
+      |- Mouse_02.tif
       |- Rabbit_01.tif
-      |- Human_01.jpg
-      |- Mouse_01.jpg
-      |- Rabbit_01.jpg
+      |- Rabbit_02.tif
+      |- overview_pic.png
+    |- shiny-scripts
+      |- app.R
   |- man
     |- loadImage.Rd
     |- viewImage.Rd
@@ -131,10 +137,14 @@ The package tree structure is provided below:
     |- loadAndDisplay.R
     |- nucleiTool.R
     |- segmentImage.R
+    |- runMyoManager.R
   |- vignettes
     |- Intrduction_MyoManager.Rmd
     |- muscle-dystrophin.jpeg
     |- muscle_stem_cell_Growth.jpeg
+    |- features_dens.png
+    |- pixel_intensity_hist.png
+    |- viewImage.png
   |- tests
     |- testthat.R
     |- testthat
@@ -152,13 +162,12 @@ An overview of the package is illustrated below.
 The author of the package is Yinni Kuang.
 
 Function ****loadImage**** is a wrap around *magick* package’s
-**image\_read** and **as\_EBImage** to load one or more images from
-files, and store the image objects as class Image from EBImage packge.
-Function ****loadImage**** is a wrap around *EBImage* package’s
-**display**, which takes a Image and prompts R’s graphic display window
-to open, this device supports single and multi-frame images as well as
-different degrees of zoom, making it easy to visualize detailed
-microscopy data.
+**image_read** and **as_EBImage** to load one or more images from files,
+and store the image objects as class Image from EBImage packge. Function
+****loadImage**** is a wrap around *EBImage* package’s **display**,
+which takes a Image and prompts R’s graphic display window to open, this
+device supports single and multi-frame images as well as different
+degrees of zoom, making it easy to visualize detailed microscopy data.
 
 Function ****blurImage**** *EBImage*’s **makeBrush** to generates a 2D
 matrix containing the magic brush of desired shape and size, then to
@@ -192,6 +201,11 @@ Plotting function ****plotFeature**** generated density plots using the
 *ggplot2* package, while function ****ploteFeatureMatrix**** produced a
 matrix of scatter plots and density distribution using **ggpairs** from
 the handy *GGally* library.
+
+Function ****runMyoManager**** allows users unfamiliar with the R
+environment to run a shiny app constructed this package. Inside the app,
+one can interact with all of the functionalities of the package through
+a GUI instead of the R commandline.
 
 ## References
 

@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 
 ## Description
 
-**MyoManager** is a R toolbox for reading, visualizing, and analyzing microscopy images focused on muscle stem cells in their native microenvironment --- the muscle tissue niche. Specifically, three areas of analysis will be implemented: cell counting (by counting #nuclei), nuclei morphology (by extracting quantitative shape/size features of segmented objects from image data), and signal co-localization (under construction). While muscle stem cells are well characterized in literature, imaging these characteristics is a laborious task for researchers, the goal of this tool is to automate image analysis of hard-to-distinguish structures in muscle stem cells and provided better insight into their biology and behaviors. 
+**MyoManager** is a R toolbox for reading, visualizing, and analyzing microscopy images focused on muscle stem cells in their native microenvironment --- the muscle tissue niche. Specifically, these analysis tools will be implemented: cell counting (by counting #nuclei), nuclei morphology (by extracting quantitative shape/size features of segmented objects from image data), and signal co-localization (work in progress). While muscle stem cells are well characterized in literature, imaging these characteristics is a laborious task for researchers, the goal of this tool is to automate image analysis of hard-to-distinguish structures in muscle stem cells and provided better insight into their biology and behaviors. 
 
 Bio-image analysis is not novel to the R environment. Packages like **EBImage** contain a wide assortment of processing functions. However they are not sufficient enough for complex, hard-to-distinguish structures such as muscle stem cells. **MyoManager** is a highly specific package built for analyzing muscle stem cells in varying developmental stages in the tissue, which has not been previously attempted. Not only does this package handle visualization and basic image manipulations, it combines several general purpose functionalities of **EBImage** to simplify the image analysis workflow and extract image data useful for understanding muscle stem cells.
 
@@ -34,8 +34,10 @@ install_github("karenkuang37/MyoManager", build_vignettes = TRUE)
 library("MyoManager")
 ```
 
-To run the shinyApp:
-# Under construction
+Try out the shinyApp implementation of MyoManager:
+```{r eval=FALSE}
+MyoManager::runMyoManager()
+```
 
 
 ## Overview
@@ -55,7 +57,7 @@ There are (currently) 4 groups of functions available to the user:
 
 **4. nucleiTool** contains several functions to support the counting of cell nuclei ( __*countNuclei*__ ); measurement of nuclei morphological features included area, perimeter, mean radius, and eccentricity ( __*getFeatureData*__ ); density distribution of one of these features ( __*plotFeatureMatrix*__ ); and a matrix of pairwise scatter plots, density plots, and correlation values of these shape/size features ( __*plotFeatureMatrix*__ ). 
 
-**5.** Other functionalities more specific to muscle stem cells will be implemented, including calculation of fusion index (ratio of [#stem cells fused with muscle fiber]:[#stem cells outside muscle fiber]), signal co-localization (how the distribution of signals in fluorescence microscopy images can be used to determine whether two probes codistribute with one another.), and others.
+**5.Future progress: ** MyoManager will be continually developed to support more analysis functions specific to muscle stem cells, such as calculation of _fusion index_ (ratio of [#stem cells fused with muscle fiber]:[#stem cells outside muscle fiber]), and _signal co-localization_ (how the distribution of signals in fluorescence microscopy images can be used to determine whether two probes codistribute with one another.).
 
 
 For more details about the functions, please take a look at the vignette for
@@ -73,17 +75,18 @@ The package tree structure is provided below:
   |- NAMESPACE
   |- LICENSE
   |- README
-  |- data
-    |- GeneCounts.rda
   |- inst
     CITATION
     |- extdata
       |- Human_01.tiff
+      |- Human_02.tiff
       |- Mouse_01.tiff
+      |- Mouse_02.tif
       |- Rabbit_01.tif
-      |- Human_01.jpg
-      |- Mouse_01.jpg
-      |- Rabbit_01.jpg
+      |- Rabbit_02.tif
+      |- overview_pic.png
+    |- shiny-scripts
+      |- app.R
   |- man
     |- loadImage.Rd
     |- viewImage.Rd
@@ -102,10 +105,14 @@ The package tree structure is provided below:
     |- loadAndDisplay.R
     |- nucleiTool.R
     |- segmentImage.R
+    |- runMyoManager.R
   |- vignettes
     |- Intrduction_MyoManager.Rmd
     |- muscle-dystrophin.jpeg
     |- muscle_stem_cell_Growth.jpeg
+    |- features_dens.png
+    |- pixel_intensity_hist.png
+    |- viewImage.png
   |- tests
     |- testthat.R
     |- testthat
@@ -138,6 +145,7 @@ Function __**getFeatureData**__ also uses the **computeFeatures** and its subsid
 
 Plotting function __**plotFeature**__ generated density plots using the *ggplot2* package, while function __**ploteFeatureMatrix**__ produced a matrix of scatter plots and density distribution using **ggpairs** from the handy *GGally* library.
 
+Function __**runMyoManager**__ allows users unfamiliar with the R environment to run a shiny app constructed this package. Inside the app, one can interact with all of the functionalities of the package through a GUI instead of the R commandline.
 
 ## References
 
