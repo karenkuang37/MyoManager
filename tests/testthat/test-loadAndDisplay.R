@@ -18,9 +18,8 @@ test_that("valid file from url", {
 
 test_that("multiple valid files from path/url", {
 
-  human <- system.file('extdata/Human_01.jpg', package = 'MyoManager')
-  mouse <- system.file('extdata/Mouse_01.jpg', package = 'MyoManager')
-  #rabbit <- system.file('extdata/Rabbit_01.jpg', package = 'MyoManager')
+  human <- system.file('extdata/Human_01.tiff', package = 'MyoManager')
+  mouse <- system.file('extdata/Mouse_01.tiff', package = 'MyoManager')
   rabbit <- "https://user-images.githubusercontent.com/60583839/141215629-f19d4a77-c5f0-491f-9262-b22cd59739e3.jpg"
   x <- list(human, mouse, rabbit)
   img_set <- loadImage(x)
@@ -40,9 +39,9 @@ test_that("invalid source path", {
 
 test_that("one or more invalid source path", {
 
-  human <- system.file('extdata/Human_01.jpg', package = 'MyoManager')
-  mouse <- system.file('extdata/Mouse_01.jpg', package = 'MyoManager')
-  fish <- system.file('extdata/zebrafish_01.jpg', package = 'MyoManager')
+  human <- system.file('extdata/Human_01.tiff', package = 'MyoManager')
+  mouse <- system.file('extdata/Mouse_01.tiff', package = 'MyoManager')
+  fish <- system.file('extdata/zebrafish_01.tiff', package = 'MyoManager')
   x <- list(human, mouse, fish)
 
   expect_error(loadImage(x), "input is an invalid file path.")
