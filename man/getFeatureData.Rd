@@ -27,7 +27,7 @@ defined binary objects.
 }
 \examples{
 # Example 1
-rabbit = loadImage(system.file('extdata/Rabbit_01.tif', package='MyoManager'))
+rabbit = loadImage(system.file('extdata/Rabbit_02.tif', package='MyoManager'))
 rNuc = selectFrame(rabbit, 3)
 rNucFeatures_df = getFeatureData(rNuc)
 
