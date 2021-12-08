@@ -1,4 +1,4 @@
-utils::globalVariables(c("colorMode", "aes", "s.area", "..density..", "margin", "element_rect", "s.perimeter", "s.radius.mean", "s.eccentricity", "%>%", "wrap"))
+utils::globalVariables(c("colorMode", "aes", "s.area", "..density..", "..count..", "margin", "element_rect", "s.perimeter", "s.radius.mean", "s.eccentricity", "%>%", "wrap"))
 #' Count the number of distinct objects in an image (nuclei)
 #'
 #' The following function uses several functions from \code{EBImage} to
@@ -202,6 +202,7 @@ getFeatureData <- function(img){
 #' @import ggplot2
 #' @importFrom methods is
 #' @importFrom magrittr %>%
+#' @importFrom scales percent_format
 #' @export
 plotFeature <- function(featureDF, feature = c("area", "perimeter", "radius", "roundness")){
 
